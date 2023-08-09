@@ -358,7 +358,7 @@ void motor_stop(void)
   set_duty_rl(0.0);
 }
 
-void rate_control(void)
+void rate_control(void)  //角速度
 {
   float p_rate, q_rate, r_rate;
   float p_ref, q_ref, r_ref;
@@ -464,7 +464,7 @@ void rate_control(void)
   //logging();
 }
 
-void angle_control(void)
+void angle_control(void)    //角度
 {
   float phi_err,theta_err,psi_err;
   float q0,q1,q2,q3;
@@ -530,6 +530,37 @@ void angle_control(void)
     D_time2=E_time2-S_time2;
 
   }
+}
+
+// -----------------------------------------------------
+// ライントレース
+// -----------------------------------------------------
+float Line_range = 0;   //目標位置
+float Phi_com;
+void Linetrace(void){
+  float phi_range;      
+  float phi_ref; 
+  float phi_err; 
+
+  phi_pid.set_parameter(1,1,1,1,1);
+  sensor_read();
+
+  //Control range velocity
+  phi_range = Phi - Phi_bias;
+
+
+  //Error
+  phi_err = Line_range - Phi_ref;
+
+  Phi_ref = Phi_ref;
+
+
+  //PID
+  Phi_com = phi_pid.update(phi_err);
+
+  angle_control();
+
+
 }
 
 void logging(void)

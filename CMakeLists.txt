@@ -9,7 +9,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(PICO_EXAMPLES_PATH ${PROJECT_SOURCE_DIR})
 
 pico_sdk_init()
-include_directories(/Users/itoukouhei/pico/eigen)
+include_directories(/home/shohei/pico/eigen)
 
 add_executable(pico_copter
   pico_copter.cpp
@@ -32,4 +32,3 @@ pico_enable_stdio_usb(pico_copter 1)
 pico_enable_stdio_uart(pico_copter 0)
 
 pico_add_extra_outputs(pico_copter)
-
