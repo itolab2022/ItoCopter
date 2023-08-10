@@ -541,6 +541,30 @@ void angle_control(void)
 //#############################################################################
 
 #if 0
+//Hara's code
+//----------------------------------------------------
+void linetrace(void)
+{
+  PID Line_phi_pid;
+  PID Line_psi_pid;
+
+  float Line_range;
+  float Line_phi_err,Line_psi_err;
+  float Line_Pref=0.0, Line_Rref=0.0;
+
+  Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);
+  Line_psi_pid.set_parameter ( 1, 1, 1, 1, 1);
+
+  Line_phi_err = Line_range;
+  Line_psi_err = Line_range;
+
+  Line_Pref = Line_phi_pid.update(Line_phi_err);
+  Line_Rref = Line_psi_pid.update(Line_psi_err);
+  
+}
+
+
+
 //Kawasaki's code
 //----------------------------------------------------
 //ライントレース
