@@ -536,11 +536,11 @@ void angle_control(void)    //角度
 // ライントレース
 // -----------------------------------------------------
 float Line_range = 0;   //目標位置
-float Phi_com;
 void Linetrace(void){
   float phi_range;      
   float phi_ref; 
   float phi_err; 
+  float Phi_com;
 
   phi_pid.set_parameter(1,1,1,1,1);
   sensor_read();
