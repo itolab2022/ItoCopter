@@ -224,7 +224,15 @@ void loop_400Hz(void)
       //Angle Control (100Hz)
       sem_release(&sem);
     }
+    if(LineTraceCounter == 10)
+    {
+      LineTraceCounter = 0;
+      //linetrace (40Hz)
+      if (Line_trace_flag == 1)linetrace();     
+    }
     AngleControlCounter++;
+    LineTraceCounter ++;
+    
   }
   else if(Arm_flag==3)
   {
@@ -505,7 +513,7 @@ void angle_control(void)
     Psi = atan2(e12,e11);
 
     //Get angle ref (manual flight) 
-    if ()
+    if (1)
      {
         Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
         Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
@@ -513,7 +521,7 @@ void angle_control(void)
      }
 
     //Auto flight
-    if ()
+    else if (0)
      {
       //saturation Rref
       if (Rref >= (rate_limit*pi()/180))
@@ -595,20 +603,8 @@ void angle_control(void)
   }
 }
 
-//---------------------------------------------------------------------------------------------------
-//LineTrace
 void linetrace(void)
 {
-rate_control();
-   
- if(linetraceCounter==10)
-    {
-      linetraceCounter=0;
-      //Angle Control (100Hz)
-      sem_release(&sem);
-    }
-    linetraceCounter++;
-
   //目標値との誤差
   float trace_phi_err;
   float trace_psi_err;
@@ -649,12 +645,8 @@ rate_control();
   else if ( phi_ref <= -60*pi()/180 )
    {
      Phi_ref = -60*pi()/180;
-   }
-  
+   }  
 }
-  
-//------------------------------------------------------------------------------------------------
-
 
 
 void logging(void)
@@ -778,7 +770,7 @@ void gyroCalibration(void)
     sumr=sumr+Wr;
   }
   Pbias=sump/N;
-  Qbias=sumq/N;
+  Qbias=sumq/N; 
   Rbias=sumr/N;
 }
 
