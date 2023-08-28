@@ -6,6 +6,9 @@ float Acc_norm=0.0;
 float Line_range;
 float Line_velocity;
 
+//Initial data
+float rate_limit = 180;
+
 //Times
 float Elapsed_time=0.0;
 uint32_t S_time=0,E_time=0,D_time=0,S_time2=0,E_time2=0,D_time2=0;
@@ -509,8 +512,6 @@ void angle_control(void)
         Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
      }
 
-    float rate_limit = 180;
-
     //Auto flight
     if ()
      {
@@ -607,8 +608,6 @@ rate_control();
       sem_release(&sem);
     }
     linetraceCounter++;
-
-  float rate_limit = 180;
 
   //目標値との誤差
   float trace_phi_err;
