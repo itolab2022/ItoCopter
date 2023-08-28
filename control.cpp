@@ -15,6 +15,7 @@ uint8_t AngleControlCounter=0;
 uint16_t RateControlCounter=0;
 uint16_t BiasCounter=0;
 uint16_t LedBlinkCounter=0;
+uint16_t linetraceCounter = 0;
 
 //Control 
 float FR_duty, FL_duty, RR_duty, RL_duty;
@@ -68,16 +69,6 @@ PID psi_pid;
 PID v_pid;
 PID y_pid;
 
-//PID LineTrace
-/*
-Filter acc_filter;
-PID p_trace_pid;
-PID q_trace_pid;
-PID r_trace_pid;
-PID phi_trace_pid;
-PID psi_trace_pid;
-PID v_trace_pid;
-*/
 
 void loop_400Hz(void);
 void rate_control(void);
@@ -493,10 +484,10 @@ void angle_control(void)
   float e23,e33,e13,e11,e12;
   while(1)
   {
-    sem_acquire_blocking(&sem);
+    sem_acquire_blocking(&sem); //時間統制
     sem_reset(&sem, 0);
     S_time2=time_us_32();
-    kalman_filter();
+    kalman_filter();  //100Hzで計算
     q0 = Xe(0,0);
     q1 = Xe(1,0);
     q2 = Xe(2,0);
@@ -510,10 +501,59 @@ void angle_control(void)
     Theta = atan2(-e13, sqrt(e23*e23+e33*e33));
     Psi = atan2(e12,e11);
 
-    //Get angle ref 
-    Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
-    Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
-    Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+    //Get angle ref (manual flight) 
+    if ()
+     {
+        Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
+        Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
+        Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+     }
+
+    float rate_limit = 180;
+
+    //Auto flight
+    if ()
+     {
+      //saturation Rref
+      if (Rref >= (rate_limit*pi()/180))
+      {
+        Rref = rate_limit*pi()/180;
+      }
+      else if (Rref <= -(rate_limit*pi()/180))
+      {
+        Rref = -(rate_limit*pi()/180);
+      }
+      
+      //saturation R_com
+      else if (R_com >= 3.7)
+      {
+        R_com = 3.7;
+      }
+      else if(R_com <= -3.7)
+      {
+        R_com = -3.7;
+      }
+
+      //saturation Pref
+      if (Pref >= (rate_limit*pi()/180))
+      {
+        Pref = rate_limit*pi()/180;
+      }
+      else if (Pref <= -(rate_limit*pi()/180))
+      {
+        Pref = -(rate_limit*pi()/180);
+      }
+
+      //saturation P_com
+      if (P_com >= 3.7)
+      {
+        P_com = 3.7;
+      }
+      else if (P_com <= -3.7)
+      {
+        P_com = -3.7;
+      }
+     }
 
     //Error
     phi_err   = Phi_ref   - (Phi   - Phi_bias);
@@ -545,7 +585,7 @@ void angle_control(void)
       Rref = Psi_ref;//psi_pid.update(psi_err);//Yawは角度制御しない
     }
 
-    //Logging
+    //Logging  100Hzで情報を記憶
     logging();
 
     E_time2=time_us_32();
@@ -558,112 +598,59 @@ void angle_control(void)
 //LineTrace
 void linetrace(void)
 {
+rate_control();
+   
+ if(linetraceCounter==10)
+    {
+      linetraceCounter=0;
+      //Angle Control (100Hz)
+      sem_release(&sem);
+    }
+    linetraceCounter++;
+
   float rate_limit = 180;
 
   //目標値との誤差
   float trace_phi_err;
   float trace_psi_err;
-  float trace_p_err;
-  float trace_r_err;
   float trace_v_err;
   float trace_y_err;
 
   //目標値
-  float Phi_ref;
-  float Psi_ref;
-  float P_ref;
-  float R_ref;
-  float V_ref = 0;
-  float Y_ref = 0;
-  float Roll_ref;
-  float Yaw_ref;
+  float phi_ref;
+  float psi_ref;
+  float v_ref = 0;
+  float y_ref = 0;
 
-  //Yaw roop
+  //Yaw loop
   //Y_con
-  trace_y_err = ( Y_ref - Line_range);
-  Psi_ref = y_pid.update(trace_y_err);
+  trace_y_err = ( y_ref - Line_range);
+  psi_ref = y_pid.update(trace_y_err);
   
   //saturation Psi_ref
-  if ( Psi_ref >= 0.69813 )
-  {
-    Psi_ref = 0.69813;
-  }
-  else if ( Psi_ref <= -0.69813 )
-  {
-    Psi_ref = -0.69813;
-  }
+  if ( psi_ref >= 0.69813 )
+   {
+     Psi_ref = 0.69813;
+   }
+  else if ( psi_ref <= -0.69813 )
+   {
+     Psi_ref = -0.69813;
+   }
 
-  //Psi_con
-  trace_psi_err = ( Psi_ref - (Psi - Psi_bias));
-  R_ref = psi_pid.update(trace_psi_err);
-
-  //saturation R_ref
-  if ( R_ref >= 3.1416 )
-  {
-    R_ref = 3.1416;
-  }
-  else if ( R_ref <= -3.1416 )
-  {
-    R_ref = -3.1416;
-  }
-
-  //R_con
-  trace_r_err = ( R_ref - (Wr - Rbias));
-  Yaw_ref = r_pid.update(trace_r_err);
-  
-  //saturation Roll_ref
-  if ( Yaw_ref >= 3.7 )
-  {
-    Yaw_ref = 3.7;
-  }
-  else if ( Yaw_ref <= -3.7 )
-  {
-    Yaw_ref = -3.7;
-  }  
-
-  //Roll roop
+  //Roll loop
   //V_con
-  trace_v_err = ( V_ref - Line_velocity);
-  Phi_ref = v_pid.update(trace_v_err);
+  trace_v_err = ( v_ref - Line_velocity);
+  phi_ref = v_pid.update(trace_v_err);
 
   //saturation Phi_ref
-  if ( Phi_ref >= 1.0472 )
-  {
-    Phi_ref = 1.0472;
-  }
-  else if ( Phi_ref <= -1.0472 )
-  {
-    Phi_ref = -1.0472;
-  }
-
-  //Phi_con
-  trace_phi_err = (Phi_ref - (Phi - Phi_bias));
-  P_ref = phi_pid.update(trace_phi_err);
-
-  //saturation P_ref
-  if ( P_ref >= 3.1416 )
-  {
-    P_ref = 3.1416;
-  }
-  else if ( P_ref <= -3.1416 )
-  {
-    P_ref = -3.1416;
-  }
-
-  //P_con
-  trace_p_err = ( P_ref - (Wp = Pbias));
-  Roll_ref = p_pid.update(trace_p_err);
-
-  //saturation Roll_ref
-  if ( Roll_ref >= 3.7 )
-  {
-    Roll_ref = 3.7;
-  }
-  else if ( Roll_ref <= -3.7 )
-  {
-    Roll_ref = -3.7;
-  } 
-
+  if ( phi_ref >= 1.0472 )
+   {
+     Phi_ref = 1.0472;
+   }
+  else if ( phi_ref <= -1.0472 )
+   {
+     Phi_ref = -1.0472;
+   }
   
 }
   
