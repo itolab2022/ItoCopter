@@ -521,56 +521,13 @@ void angle_control(void)
      }
 
     //Auto flight
-    else if (0)
-     {
-      //saturation Rref
-      if (Rref >= (rate_limit*pi()/180))
-      {
-        Rref = rate_limit*pi()/180;
-      }
-      else if (Rref <= -(rate_limit*pi()/180))
-      {
-        Rref = -(rate_limit*pi()/180);
-      }
-      
-      //saturation R_com
-      else if (R_com >= 3.7)
-      {
-        R_com = 3.7;
-      }
-      else if(R_com <= -3.7)
-      {
-        R_com = -3.7;
-      }
-
-      //saturation Pref
-      if (Pref >= (rate_limit*pi()/180))
-      {
-        Pref = rate_limit*pi()/180;
-      }
-      else if (Pref <= -(rate_limit*pi()/180))
-      {
-        Pref = -(rate_limit*pi()/180);
-      }
-
-      //saturation P_com
-      if (P_com >= 3.7)
-      {
-        P_com = 3.7;
-      }
-      else if (P_com <= -3.7)
-      {
-        P_com = -3.7;
-      }
-     }
-
     //Error
     phi_err   = Phi_ref   - (Phi   - Phi_bias);
     theta_err = Theta_ref - (Theta - Theta_bias);
     psi_err   = Psi_ref   - (Psi   - Psi_bias);
     
     //PID Control
-    if (T_ref/BATTERY_VOLTAGE < Flight_duty)
+    else if (T_ref/BATTERY_VOLTAGE < Flight_duty)
     {
       Pref=0.0;
       Qref=0.0;
@@ -587,11 +544,51 @@ void angle_control(void)
       Psi_bias   = Psi;
       /////////////////////////////////////
     }
-    else
+    else if(0)
     {
       Pref = phi_pid.update(phi_err);
       Qref = theta_pid.update(theta_err);
-      Rref = Psi_ref;//psi_pid.update(psi_err);//Yawは角度制御しない
+      Rref = psi_pid.update(psi_err);
+    }
+
+    //saturation Rref
+    else if (Rref >= (rate_limit*pi()/180))
+    {
+      Rref = rate_limit*pi()/180;
+    }
+    else if (Rref <= -(rate_limit*pi()/180))
+    {
+      Rref = -(rate_limit*pi()/180);
+    }
+      
+    //saturation R_com
+    else if (R_com >= 3.7)
+    {
+      R_com = 3.7;
+    }
+    else if(R_com <= -3.7)
+    {
+      R_com = -3.7;
+    }
+
+    //saturation Pref
+    else if (Pref >= (rate_limit*pi()/180))
+    {
+      Pref = rate_limit*pi()/180;
+    }
+    else if (Pref <= -(rate_limit*pi()/180))
+    {
+      Pref = -(rate_limit*pi()/180);
+    }
+
+    //saturation P_com
+    else if (P_com >= 3.7)
+    {
+      P_com = 3.7;
+    }
+    else if (P_com <= -3.7)
+    {
+      P_com = -3.7;
     }
 
     //Logging  100Hzで情報を記憶
