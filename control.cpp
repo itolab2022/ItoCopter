@@ -3,6 +3,11 @@
 //Sensor data
 float Ax,Ay,Az,Wp,Wq,Wr,Mx,My,Mz,Mx0,My0,Mz0,Mx_ave,My_ave,Mz_ave;
 float Acc_norm=0.0;
+float Line_range;
+float Line_velocity;
+
+//Initial data
+float rate_limit = 180;
 
 //Times
 float Elapsed_time=0.0;
@@ -13,6 +18,7 @@ uint8_t AngleControlCounter=0;
 uint16_t RateControlCounter=0;
 uint16_t BiasCounter=0;
 uint16_t LedBlinkCounter=0;
+uint16_t linetraceCounter = 0;
 
 //Control 
 float FR_duty, FL_duty, RR_duty, RL_duty;
@@ -63,6 +69,9 @@ PID r_pid;
 PID phi_pid;
 PID theta_pid;
 PID psi_pid;
+PID v_pid;
+PID y_pid;
+
 
 void loop_400Hz(void);
 void rate_control(void);
@@ -215,7 +224,15 @@ void loop_400Hz(void)
       //Angle Control (100Hz)
       sem_release(&sem);
     }
+    if(LineTraceCounter == 10)
+    {
+      LineTraceCounter = 0;
+      //linetrace (40Hz)
+      if (Line_trace_flag == 1)linetrace();     
+    }
     AngleControlCounter++;
+    LineTraceCounter ++;
+    
   }
   else if(Arm_flag==3)
   {
@@ -292,6 +309,13 @@ void control_init(void)
   phi_pid.set_parameter  ( 5.5, 9.5, 0.025, 0.018, 0.01);//6.0
   theta_pid.set_parameter( 5.5, 9.5, 0.025, 0.018, 0.01);//6.0
   psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
+
+ //velocity control
+ v_pid.set_parameter (0.5, 0.00001, 0.09, 0.01, 0.03);
+
+ //position control
+ y_pid.set_parameter (1, 1, 1, 1, 1);
+
   //Rate control
   //p_pid.set_parameter(3.3656, 0.1, 0.0112, 0.01, 0.0025);
   //q_pid.set_parameter(3.8042, 0.1, 0.0111, 0.01, 0.0025);
@@ -471,10 +495,10 @@ void angle_control(void)
   float e23,e33,e13,e11,e12;
   while(1)
   {
-    sem_acquire_blocking(&sem);
+    sem_acquire_blocking(&sem); //時間統制
     sem_reset(&sem, 0);
     S_time2=time_us_32();
-    kalman_filter();
+    kalman_filter();  //100Hzで計算
     q0 = Xe(0,0);
     q1 = Xe(1,0);
     q2 = Xe(2,0);
@@ -488,10 +512,57 @@ void angle_control(void)
     Theta = atan2(-e13, sqrt(e23*e23+e33*e33));
     Psi = atan2(e12,e11);
 
-    //Get angle ref 
-    Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
-    Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
-    Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+    //Get angle ref (manual flight) 
+    if (1)
+     {
+        Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
+        Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
+        Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+     }
+
+    //Auto flight
+    else if (0)
+     {
+      //saturation Rref
+      if (Rref >= (rate_limit*pi()/180))
+      {
+        Rref = rate_limit*pi()/180;
+      }
+      else if (Rref <= -(rate_limit*pi()/180))
+      {
+        Rref = -(rate_limit*pi()/180);
+      }
+      
+      //saturation R_com
+      else if (R_com >= 3.7)
+      {
+        R_com = 3.7;
+      }
+      else if(R_com <= -3.7)
+      {
+        R_com = -3.7;
+      }
+
+      //saturation Pref
+      if (Pref >= (rate_limit*pi()/180))
+      {
+        Pref = rate_limit*pi()/180;
+      }
+      else if (Pref <= -(rate_limit*pi()/180))
+      {
+        Pref = -(rate_limit*pi()/180);
+      }
+
+      //saturation P_com
+      if (P_com >= 3.7)
+      {
+        P_com = 3.7;
+      }
+      else if (P_com <= -3.7)
+      {
+        P_com = -3.7;
+      }
+     }
 
     //Error
     phi_err   = Phi_ref   - (Phi   - Phi_bias);
@@ -523,7 +594,7 @@ void angle_control(void)
       Rref = Psi_ref;//psi_pid.update(psi_err);//Yawは角度制御しない
     }
 
-    //Logging
+    //Logging  100Hzで情報を記憶
     logging();
 
     E_time2=time_us_32();
@@ -532,94 +603,49 @@ void angle_control(void)
   }
 }
 
-//#############################################################################
-//#############################################################################
-//
-// The Line Trace
-//
-//#############################################################################
-//#############################################################################
-
-#if 0
-//Hara's code
-//----------------------------------------------------
 void linetrace(void)
 {
-  PID Line_phi_pid;
-  PID Line_psi_pid;
-
-  float Line_range;
-  float Line_phi_err,Line_psi_err;
-  float Line_Pref=0.0, Line_Rref=0.0;
-
-  Line_phi_pid.set_parameter ( 1, 1, 1, 1, 1);
-  Line_psi_pid.set_parameter ( 1, 1, 1, 1, 1);
-
-  Line_phi_err = Line_range;
-  Line_psi_err = Line_range;
-
-  Line_Pref = Line_phi_pid.update(Line_phi_err);
-  Line_Rref = Line_psi_pid.update(Line_psi_err);
-  
-}
-
-
-
-//Kawasaki's code
-//----------------------------------------------------
-//ライントレース
-void linetrace(void)
-{
-  float Line_range;
-  float phi_range;
-  float phi_ref;
-  float phi_err;
-  float phi_com;
-
-  phi_ref = 0;
-  phi_pid.set_parameter(1,1,1,1,1);
-  sensor_read();
-
-  phi_range = Phi - Phi_bias;
-
-  phi_ref = Phi_ref;
-
-  P_com = p_pid.update(phi_err);
-
-  phi_err   = Phi_ref   - (Line_range  - Phi_bias);
-
-  phi_range = Phi - Phi_bias;
-
-  phi_com = phi_pid.update(phi_err);
-  
-}
-#endif
-
-//---------------------------------------------------------------------
-//Mizutani's code
-void linetrace(void)
-{
-  PID trace_phi_pid;
-  PID trace_psi_pid;
-
-  float Line_range;
+  //目標値との誤差
   float trace_phi_err;
   float trace_psi_err;
-  float Phi_com;
-  float Psi_com;
+  float trace_v_err;
+  float trace_y_err;
 
-  //angle controll
-  trace_phi_pid.set_parameter  ( 5.5, 9.5, 0.025, 0.018, 0.01);
-  trace_psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
+  //目標値
+  float phi_ref;
+  float psi_ref;
+  float v_ref = 0;
+  float y_ref = 0;
 
-  //Get phi,psi err
-  trace_phi_err = Line_range;
-  trace_psi_err = Line_range;
-
-  //PID LineTrace
-  Phi_com = trace_phi_pid.update(trace_phi_err);
-  Psi_com = trace_psi_pid.update(trace_psi_err);
+  //Yaw loop
+  //Y_con
+  trace_y_err = ( y_ref - Line_range);
+  psi_ref = y_pid.update(trace_y_err);
   
+  //saturation Psi_ref
+  if ( psi_ref >= 40*pi()/180 )
+   {
+     Psi_ref = 40*pi()/180;
+   }
+  else if ( psi_ref <= -40*pi()/180 )
+   {
+     Psi_ref = -40*pi()/180;
+   }
+
+  //Roll loop
+  //V_con
+  trace_v_err = ( v_ref - Line_velocity);
+  phi_ref = v_pid.update(trace_v_err);
+
+  //saturation Phi_ref
+  if ( phi_ref >= 60*pi()/180 )
+   {
+     Phi_ref = 60*pi()/180;
+   }
+  else if ( phi_ref <= -60*pi()/180 )
+   {
+     Phi_ref = -60*pi()/180;
+   }  
 }
 
 
