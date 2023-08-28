@@ -627,13 +627,13 @@ rate_control();
   psi_ref = y_pid.update(trace_y_err);
   
   //saturation Psi_ref
-  if ( psi_ref >= 0.69813 )
+  if ( psi_ref >= 40*pi()/180 )
    {
-     Psi_ref = 0.69813;
+     Psi_ref = 40*pi()/180;
    }
-  else if ( psi_ref <= -0.69813 )
+  else if ( psi_ref <= -40*pi()/180 )
    {
-     Psi_ref = -0.69813;
+     Psi_ref = -40*pi()/180;
    }
 
   //Roll loop
@@ -642,13 +642,13 @@ rate_control();
   phi_ref = v_pid.update(trace_v_err);
 
   //saturation Phi_ref
-  if ( phi_ref >= 1.0472 )
+  if ( phi_ref >= 60*pi()/180 )
    {
-     Phi_ref = 1.0472;
+     Phi_ref = 60*pi()/180;
    }
-  else if ( phi_ref <= -1.0472 )
+  else if ( phi_ref <= -60*pi()/180 )
    {
-     Phi_ref = -1.0472;
+     Phi_ref = -60*pi()/180;
    }
   
 }
