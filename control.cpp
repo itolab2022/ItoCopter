@@ -9,6 +9,14 @@ float Line_velocity;
 //Initial data
 float rate_limit = 180;
 
+// 追加しょうへい2023-8-29
+// Rocking wings
+float Rocking_timer = 0.0;
+float rocking_wings(float stick);
+uint8_t Flight_mode = 0;//0:Normal 1:Rocking wings 2:Landing
+
+
+
 //Times
 float Elapsed_time=0.0;
 uint32_t S_time=0,E_time=0,D_time=0,S_time2=0,E_time2=0,D_time2=0;
@@ -85,9 +93,27 @@ void motor_stop(void);
 uint8_t lock_com(void);
 uint8_t logdata_out_com(void);
 void printPQR(void);
+// 追加
+void servo_control(void);
+void led_control(void);
+
 
 #define AVERAGE 2000
 #define KALMANWAIT 6000
+
+// LEDcontrol
+void led_control(void){
+  static uint16_t cnt=0;
+  if(){
+
+  }
+
+  else if (Arm_flag ==2 && Flight_mode == ROCKING)  
+  {
+    rgbled_rocking();
+  }
+}
+
 
 //Main loop
 //This function is called from PWM Intrupt on 400Hz.
@@ -98,6 +124,12 @@ void loop_400Hz(void)
   
   //割り込みフラグリセット
   pwm_clear_irq(2);
+
+  //Servo Control
+  servo_control();
+
+   //LED Control
+  led_control();
 
 
   if (Arm_flag==0)
@@ -382,6 +414,14 @@ void motor_stop(void)
   set_duty_rl(0.0);
 }
 
+// サーボ追加----------------------------------------------------
+void servo_control(void)
+{
+  if (Chdata[SERVO] > (SERVO_MAX+SERVO_MIN)/2 ) payload_relese();
+  if (Chdata[SERVO] < (SERVO_MAX+SERVO_MIN)/2 ) payload_hook();
+}
+// --------------------------------------------------------------
+
 void rate_control(void)
 {
   float p_rate, q_rate, r_rate;
@@ -390,6 +430,27 @@ void rate_control(void)
 
   //Read Sensor Value
   sensor_read();
+
+  // しょうへい--------------------------------------------------------
+  // Mode SW
+  //Chdata[MODE_SW]=1000;//本番はコメントにする/////////////////////////////////////////////////////////////////////////
+  if (Chdata[MODE_SW]>1241)
+  {
+    Flight_mode = ROCKING;
+    Red_flag = 0;
+  }
+  else if (Chdata[MODE_SW]<804) 
+  {
+    Flight_mode = NORMAL;
+    Red_flag = 0;
+    Rocking_timer = 0.0;
+  }
+  else
+  {
+    Flight_mode = REDCIRCLE;
+    Rocking_timer = 0.0;
+  }
+  // ---------------------------------------------------------------
 
   //Get Bias
   //Pbias = Xe(4, 0);
@@ -520,6 +581,15 @@ void angle_control(void)
         Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
      }
 
+    // しょうへい--------------------------------------------------------------
+    //Rocking Wings
+    //ロッキングウイングは時間で終了する。終了したら事前に得ているStick量がPhi_refになる．　　　　→598行
+    else if(Flight_mode == ROCKING)
+    {
+      Phi_ref = rocking_wings(Phi_ref);
+    }
+    // ------------------------------------------------------------------------
+
     //Auto flight
     //Error
     phi_err   = Phi_ref   - (Phi   - Phi_bias);
@@ -599,6 +669,25 @@ void angle_control(void)
 
   }
 }
+
+// しょうへい----------------------------
+// Rocking wings
+float rocking_wings(float stick)
+{
+  float angle=25;//[deg]
+  float f=5.0;//[Hz]
+
+  if(Rocking_timer<2.0)
+  {
+    Rocking_timer = Rocking_timer + 0.01;
+    rgbled_rocking();
+    return angle*M_PI/180*sin(f*2*M_PI*Rocking_timer);
+  }
+  rgbled_normal();
+  return stick;
+}
+
+// --------------------------------------
 
 void linetrace(void)
 {
