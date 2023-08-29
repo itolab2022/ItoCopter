@@ -1,5 +1,8 @@
 #include "control.hpp"
 
+
+
+// しょうへい
 //Sensor data
 float Ax,Ay,Az,Wp,Wq,Wr,Mx,My,Mz,Mx0,My0,Mz0,Mx_ave,My_ave,Mz_ave;
 float Acc_norm=0.0;
