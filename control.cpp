@@ -1,11 +1,13 @@
 #include "control.hpp"
 
-
-
-// しょうへい
 //Sensor data
 float Ax,Ay,Az,Wp,Wq,Wr,Mx,My,Mz,Mx0,My0,Mz0,Mx_ave,My_ave,Mz_ave;
 float Acc_norm=0.0;
+float Line_range;
+float Line_velocity;
+
+//Initial data
+float rate_limit = 180;
 
 //Times
 float Elapsed_time=0.0;
@@ -16,6 +18,7 @@ uint8_t AngleControlCounter=0;
 uint16_t RateControlCounter=0;
 uint16_t BiasCounter=0;
 uint16_t LedBlinkCounter=0;
+uint16_t linetraceCounter = 0;
 
 //Control 
 float FR_duty, FL_duty, RR_duty, RL_duty;
@@ -66,6 +69,9 @@ PID r_pid;
 PID phi_pid;
 PID theta_pid;
 PID psi_pid;
+PID v_pid;
+PID y_pid;
+
 
 void loop_400Hz(void);
 void rate_control(void);
@@ -218,7 +224,15 @@ void loop_400Hz(void)
       //Angle Control (100Hz)
       sem_release(&sem);
     }
+    if(LineTraceCounter == 10)
+    {
+      LineTraceCounter = 0;
+      //linetrace (40Hz)
+      if (Line_trace_flag == 1)linetrace();     
+    }
     AngleControlCounter++;
+    LineTraceCounter ++;
+    
   }
   else if(Arm_flag==3)
   {
@@ -295,6 +309,13 @@ void control_init(void)
   phi_pid.set_parameter  ( 5.5, 9.5, 0.025, 0.018, 0.01);//6.0
   theta_pid.set_parameter( 5.5, 9.5, 0.025, 0.018, 0.01);//6.0
   psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
+
+ //velocity control
+ v_pid.set_parameter (0.5, 0.00001, 0.09, 0.01, 0.03);
+
+ //position control
+ y_pid.set_parameter (1, 1, 1, 1, 1);
+
   //Rate control
   //p_pid.set_parameter(3.3656, 0.1, 0.0112, 0.01, 0.0025);
   //q_pid.set_parameter(3.8042, 0.1, 0.0111, 0.01, 0.0025);
@@ -361,7 +382,7 @@ void motor_stop(void)
   set_duty_rl(0.0);
 }
 
-void rate_control(void)  //角速度
+void rate_control(void)
 {
   float p_rate, q_rate, r_rate;
   float p_ref, q_ref, r_ref;
@@ -467,17 +488,17 @@ void rate_control(void)  //角速度
   //logging();
 }
 
-void angle_control(void)    //角度
+void angle_control(void)
 {
   float phi_err,theta_err,psi_err;
   float q0,q1,q2,q3;
   float e23,e33,e13,e11,e12;
   while(1)
   {
-    sem_acquire_blocking(&sem);
+    sem_acquire_blocking(&sem); //時間統制
     sem_reset(&sem, 0);
     S_time2=time_us_32();
-    kalman_filter();
+    kalman_filter();  //100Hzで計算
     q0 = Xe(0,0);
     q1 = Xe(1,0);
     q2 = Xe(2,0);
@@ -491,18 +512,22 @@ void angle_control(void)    //角度
     Theta = atan2(-e13, sqrt(e23*e23+e33*e33));
     Psi = atan2(e12,e11);
 
-    //Get angle ref 
-    Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
-    Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
-    Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+    //Get angle ref (manual flight) 
+    if (1)
+     {
+        Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
+        Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
+        Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+     }
 
+    //Auto flight
     //Error
     phi_err   = Phi_ref   - (Phi   - Phi_bias);
     theta_err = Theta_ref - (Theta - Theta_bias);
     psi_err   = Psi_ref   - (Psi   - Psi_bias);
     
     //PID Control
-    if (T_ref/BATTERY_VOLTAGE < Flight_duty)
+    else if (T_ref/BATTERY_VOLTAGE < Flight_duty)
     {
       Pref=0.0;
       Qref=0.0;
@@ -519,14 +544,54 @@ void angle_control(void)    //角度
       Psi_bias   = Psi;
       /////////////////////////////////////
     }
-    else
+    else if(0)
     {
       Pref = phi_pid.update(phi_err);
       Qref = theta_pid.update(theta_err);
-      Rref = Psi_ref;//psi_pid.update(psi_err);//Yawは角度制御しない
+      Rref = psi_pid.update(psi_err);
     }
 
-    //Logging
+    //saturation Rref
+    else if (Rref >= (rate_limit*pi()/180))
+    {
+      Rref = rate_limit*pi()/180;
+    }
+    else if (Rref <= -(rate_limit*pi()/180))
+    {
+      Rref = -(rate_limit*pi()/180);
+    }
+      
+    //saturation R_com
+    else if (R_com >= 3.7)
+    {
+      R_com = 3.7;
+    }
+    else if(R_com <= -3.7)
+    {
+      R_com = -3.7;
+    }
+
+    //saturation Pref
+    else if (Pref >= (rate_limit*pi()/180))
+    {
+      Pref = rate_limit*pi()/180;
+    }
+    else if (Pref <= -(rate_limit*pi()/180))
+    {
+      Pref = -(rate_limit*pi()/180);
+    }
+
+    //saturation P_com
+    else if (P_com >= 3.7)
+    {
+      P_com = 3.7;
+    }
+    else if (P_com <= -3.7)
+    {
+      P_com = -3.7;
+    }
+
+    //Logging  100Hzで情報を記憶
     logging();
 
     E_time2=time_us_32();
@@ -535,36 +600,51 @@ void angle_control(void)    //角度
   }
 }
 
-// -----------------------------------------------------
-// ライントレース
-// -----------------------------------------------------
-float Line_range = 0;   //目標位置
-void Linetrace(void){
-  float phi_range;      
-  float phi_ref; 
-  float phi_err; 
-  float Phi_com;
+void linetrace(void)
+{
+  //目標値との誤差
+  float trace_phi_err;
+  float trace_psi_err;
+  float trace_v_err;
+  float trace_y_err;
 
-  phi_pid.set_parameter(1,1,1,1,1);
-  sensor_read();
+  //目標値
+  float phi_ref;
+  float psi_ref;
+  float v_ref = 0;
+  float y_ref = 0;
 
-  //Control range velocity
-  phi_range = Phi - Phi_bias;
+  //Yaw loop
+  //Y_con
+  trace_y_err = ( y_ref - Line_range);
+  psi_ref = y_pid.update(trace_y_err);
+  
+  //saturation Psi_ref
+  if ( psi_ref >= 40*pi()/180 )
+   {
+     Psi_ref = 40*pi()/180;
+   }
+  else if ( psi_ref <= -40*pi()/180 )
+   {
+     Psi_ref = -40*pi()/180;
+   }
 
+  //Roll loop
+  //V_con
+  trace_v_err = ( v_ref - Line_velocity);
+  phi_ref = v_pid.update(trace_v_err);
 
-  //Error
-  phi_err = Line_range - Phi_ref;
-
-  Phi_ref = Phi_ref;
-
-
-  //PID
-  Phi_com = phi_pid.update(phi_err);
-
-  angle_control();
-
-
+  //saturation Phi_ref
+  if ( phi_ref >= 60*pi()/180 )
+   {
+     Phi_ref = 60*pi()/180;
+   }
+  else if ( phi_ref <= -60*pi()/180 )
+   {
+     Phi_ref = -60*pi()/180;
+   }  
 }
+
 
 void logging(void)
 {  
@@ -687,7 +767,7 @@ void gyroCalibration(void)
     sumr=sumr+Wr;
   }
   Pbias=sump/N;
-  Qbias=sumq/N;
+  Qbias=sumq/N; 
   Rbias=sumr/N;
 }
 
