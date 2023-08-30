@@ -1,5 +1,6 @@
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/build/CMakeFiles/rebuild_cache.dir
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/build/CMakeFiles/edit_cache.dir
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/build/CMakeFiles/pico_copter_WS2812_pio_h.dir
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/build/CMakeFiles/ELF2UF2Build.dir
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/build/CMakeFiles/pico_copter.dir
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/build/pico-sdk/CMakeFiles/rebuild_cache.dir

@@ -1,6 +1,8 @@
 # Hashes of file build rules.
 a0572ffe435422df773baabc10f79e56 CMakeFiles/ELF2UF2Build
 4fe6243a4285c1fc1599a88b104d9e21 CMakeFiles/ELF2UF2Build-complete
+a0572ffe435422df773baabc10f79e56 CMakeFiles/pico_copter_WS2812_pio_h
+35ba182369b6840ee2cf9294e48dcd12 WS2812.pio.h
 6f2766a0204dafef0609cb1a83e31539 elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-build
 7bb6597dfd4ed5dfdc09a5724030ac4a elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-configure
 c3c80705f5704d8cdb60117ebab0c7b4 elf2uf2/src/ELF2UF2Build-stamp/ELF2UF2Build-download

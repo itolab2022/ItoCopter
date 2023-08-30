@@ -10,6 +10,7 @@
 #include <Eigen/Dense>
 #include "ekf.hpp"
 #include <math.h>
+#include "rgbled.hpp"
 
 using Eigen::MatrixXd;
 using Eigen::MatrixXf;
@@ -18,6 +19,8 @@ using Eigen::PartialPivLU;
 using namespace Eigen;
 
 #define BATTERY_VOLTAGE (11.1)
+#define NORMAL 0
+#define ROCKING 1
 
 
 //グローバル関数の宣言
@@ -28,6 +31,9 @@ void angle_control(void);
 void gyro_calibration(void);
 void variable_init(void);
 void log_output(void);
+void rgbled_nomal(void);
+void rgbled_off(void);
+
 
 //グローバル変数
 extern uint8_t LockMode;

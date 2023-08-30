@@ -1,5 +1,6 @@
 #include "control.hpp"
 
+
 //Sensor data
 float Ax,Ay,Az,Wp,Wq,Wr,Mx,My,Mz,Mx0,My0,Mz0,Mx_ave,My_ave,Mz_ave;
 float Acc_norm=0.0;
@@ -13,7 +14,7 @@ float rate_limit = 180;
 // Rocking wings
 float Rocking_timer = 0.0;
 float rocking_wings(float stick);
-uint8_t Flight_mode = 0;//0:Normal 1:Rocking wings 2:Landing
+uint8_t Flight_mode = 0; //0:Normal 1:Rocking wings 2:Landing
 
 
 
@@ -26,7 +27,7 @@ uint8_t AngleControlCounter=0;
 uint16_t RateControlCounter=0;
 uint16_t BiasCounter=0;
 uint16_t LedBlinkCounter=0;
-uint16_t linetraceCounter = 0;
+uint16_t LineTraceCounter = 0;
 
 //Control 
 float FR_duty, FL_duty, RR_duty, RL_duty;
@@ -41,6 +42,7 @@ float Pref=0.0,Qref=0.0,Rref=0.0;
 const float Phi_trim   = 0.01;
 const float Theta_trim = 0.02;
 const float Psi_trim   = 0.0;
+const double pi = 3.14159;
 
 //Extended Kalman filter 
 Matrix<float, 7 ,1> Xp = MatrixXf::Zero(7,1);
@@ -104,8 +106,9 @@ void led_control(void);
 // LEDcontrol
 void led_control(void){
   static uint16_t cnt=0;
-  if(){
-
+  if (Arm_flag == 0 || Arm_flag == 1)
+  {
+    rgbled_wait();      
   }
 
   else if (Arm_flag ==2 && Flight_mode == ROCKING)  
@@ -437,17 +440,17 @@ void rate_control(void)
   if (Chdata[MODE_SW]>1241)
   {
     Flight_mode = ROCKING;
-    Red_flag = 0;
+    // Red_flag = 0;
   }
   else if (Chdata[MODE_SW]<804) 
   {
     Flight_mode = NORMAL;
-    Red_flag = 0;
+    // Red_flag = 0;
     Rocking_timer = 0.0;
   }
   else
   {
-    Flight_mode = REDCIRCLE;
+    // Flight_mode = REDCIRCLE;
     Rocking_timer = 0.0;
   }
   // ---------------------------------------------------------------
@@ -622,13 +625,13 @@ void angle_control(void)
     }
 
     //saturation Rref
-    else if (Rref >= (rate_limit*pi()/180))
+    else if (Rref >= (rate_limit*pi/180))
     {
-      Rref = rate_limit*pi()/180;
+      Rref = rate_limit*pi/180;
     }
-    else if (Rref <= -(rate_limit*pi()/180))
+    else if (Rref <= -(rate_limit*pi/180))
     {
-      Rref = -(rate_limit*pi()/180);
+      Rref = -(rate_limit*pi/180);
     }
       
     //saturation R_com
@@ -642,13 +645,13 @@ void angle_control(void)
     }
 
     //saturation Pref
-    else if (Pref >= (rate_limit*pi()/180))
+    else if (Pref >= (rate_limit*pi/180))
     {
-      Pref = rate_limit*pi()/180;
+      Pref = rate_limit*pi/180;
     }
-    else if (Pref <= -(rate_limit*pi()/180))
+    else if (Pref <= -(rate_limit*pi/180))
     {
-      Pref = -(rate_limit*pi()/180);
+      Pref = -(rate_limit*pi/180);
     }
 
     //saturation P_com
@@ -709,13 +712,13 @@ void linetrace(void)
   psi_ref = y_pid.update(trace_y_err);
   
   //saturation Psi_ref
-  if ( psi_ref >= 40*pi()/180 )
+  if ( psi_ref >= 40*pi/180 )
    {
-     Psi_ref = 40*pi()/180;
+     Psi_ref = 40*pi/180;
    }
-  else if ( psi_ref <= -40*pi()/180 )
+  else if ( psi_ref <= -40*pi/180 )
    {
-     Psi_ref = -40*pi()/180;
+     Psi_ref = -40*pi/180;
    }
 
   //Roll loop
@@ -724,13 +727,13 @@ void linetrace(void)
   phi_ref = v_pid.update(trace_v_err);
 
   //saturation Phi_ref
-  if ( phi_ref >= 60*pi()/180 )
+  if ( phi_ref >= 60*pi/180 )
    {
-     Phi_ref = 60*pi()/180;
+     Phi_ref = 60*pi/180;
    }
-  else if ( phi_ref <= -60*pi()/180 )
+  else if ( phi_ref <= -60*pi/180 )
    {
-     Phi_ref = -60*pi()/180;
+     Phi_ref = -60*pi/180;
    }  
 }
 

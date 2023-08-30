@@ -19,12 +19,18 @@ add_executable(pico_copter
   pwm.cpp
   radio.cpp
   control.cpp
+  WS2812.cpp
+  rgbled.cpp
 )
+
+pico_generate_pio_header(pico_copter ${CMAKE_CURRENT_LIST_DIR}/WS2812.pio)
+
 
 target_link_libraries(pico_copter 
   hardware_spi 
   hardware_pwm 
   hardware_uart 
+  hardware_pio
   pico_stdlib
   pico_multicore)
 

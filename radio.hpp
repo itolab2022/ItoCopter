@@ -21,7 +21,13 @@
 #define CH5MIN 144
 #define CH6MAX 1904
 #define CH6MIN 144
+#define SERVO_MIN 144
+#define SERVO_MAX 1904
 
+#define MODE_SW 4
+#define LANDING_SW 5
+#define LOG 8
+#define SERVO 7
 
 //０番と1番ピンに接続
 #define UART_TX_PIN 0

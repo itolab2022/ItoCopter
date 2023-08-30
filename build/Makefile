@@ -111,6 +111,19 @@ depend:
 .PHONY : depend
 
 #=============================================================================
+# Target rules for targets named pico_copter_WS2812_pio_h
+
+# Build rule for target.
+pico_copter_WS2812_pio_h: cmake_check_build_system
+	$(MAKE) -f CMakeFiles/Makefile2 pico_copter_WS2812_pio_h
+.PHONY : pico_copter_WS2812_pio_h
+
+# fast build rule for target.
+pico_copter_WS2812_pio_h/fast:
+	$(MAKE) -f CMakeFiles/pico_copter_WS2812_pio_h.dir/build.make CMakeFiles/pico_copter_WS2812_pio_h.dir/build
+.PHONY : pico_copter_WS2812_pio_h/fast
+
+#=============================================================================
 # Target rules for targets named ELF2UF2Build
 
 # Build rule for target.
@@ -200,6 +213,33 @@ cyw43_driver_picow_cyw43_bus_pio_spi_pio_h: cmake_check_build_system
 cyw43_driver_picow_cyw43_bus_pio_spi_pio_h/fast:
 	$(MAKE) -f pico-sdk/src/rp2_common/pico_cyw43_driver/CMakeFiles/cyw43_driver_picow_cyw43_bus_pio_spi_pio_h.dir/build.make pico-sdk/src/rp2_common/pico_cyw43_driver/CMakeFiles/cyw43_driver_picow_cyw43_bus_pio_spi_pio_h.dir/build
 .PHONY : cyw43_driver_picow_cyw43_bus_pio_spi_pio_h/fast
+
+WS2812.obj: WS2812.cpp.obj
+
+.PHONY : WS2812.obj
+
+# target to build an object file
+WS2812.cpp.obj:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/WS2812.cpp.obj
+.PHONY : WS2812.cpp.obj
+
+WS2812.i: WS2812.cpp.i
+
+.PHONY : WS2812.i
+
+# target to preprocess a source file
+WS2812.cpp.i:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/WS2812.cpp.i
+.PHONY : WS2812.cpp.i
+
+WS2812.s: WS2812.cpp.s
+
+.PHONY : WS2812.s
+
+# target to generate assembly for a file
+WS2812.cpp.s:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/WS2812.cpp.s
+.PHONY : WS2812.cpp.s
 
 control.obj: control.cpp.obj
 
@@ -1137,6 +1177,33 @@ home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj:
 	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj
 .PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.S.obj
 
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.obj: home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.obj
+
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.obj
+
+# target to build an object file
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.obj:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.obj
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.obj
+
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.i: home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.i
+
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.i
+
+# target to preprocess a source file
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.i:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.i
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.i
+
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.s: home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.s
+
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.s
+
+# target to generate assembly for a file
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.s:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.s
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.c.s
+
 home/shohei/pico/pico-sdk/src/rp2_common/hardware_pll/pll.obj: home/shohei/pico/pico-sdk/src/rp2_common/hardware_pll/pll.c.obj
 
 .PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_pll/pll.obj
@@ -2055,6 +2122,33 @@ radio.cpp.s:
 	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/radio.cpp.s
 .PHONY : radio.cpp.s
 
+rgbled.obj: rgbled.cpp.obj
+
+.PHONY : rgbled.obj
+
+# target to build an object file
+rgbled.cpp.obj:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/rgbled.cpp.obj
+.PHONY : rgbled.cpp.obj
+
+rgbled.i: rgbled.cpp.i
+
+.PHONY : rgbled.i
+
+# target to preprocess a source file
+rgbled.cpp.i:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/rgbled.cpp.i
+.PHONY : rgbled.cpp.i
+
+rgbled.s: rgbled.cpp.s
+
+.PHONY : rgbled.s
+
+# target to generate assembly for a file
+rgbled.cpp.s:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/rgbled.cpp.s
+.PHONY : rgbled.cpp.s
+
 sensor.obj: sensor.cpp.obj
 
 .PHONY : sensor.obj
@@ -2090,6 +2184,7 @@ help:
 	@echo "... depend"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
+	@echo "... pico_copter_WS2812_pio_h"
 	@echo "... ELF2UF2Build"
 	@echo "... pico_copter"
 	@echo "... bs2_default_padded_checksummed_asm"
@@ -2097,6 +2192,9 @@ help:
 	@echo "... bs2_default"
 	@echo "... PioasmBuild"
 	@echo "... cyw43_driver_picow_cyw43_bus_pio_spi_pio_h"
+	@echo "... WS2812.obj"
+	@echo "... WS2812.i"
+	@echo "... WS2812.s"
 	@echo "... control.obj"
 	@echo "... control.i"
 	@echo "... control.s"
@@ -2201,6 +2299,9 @@ help:
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.i"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.s"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq_handler_chain.obj"
+	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.obj"
+	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.i"
+	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/pio.s"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_pll/pll.obj"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_pll/pll.i"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_pll/pll.s"
@@ -2303,6 +2404,9 @@ help:
 	@echo "... radio.obj"
 	@echo "... radio.i"
 	@echo "... radio.s"
+	@echo "... rgbled.obj"
+	@echo "... rgbled.i"
+	@echo "... rgbled.s"
 	@echo "... sensor.obj"
 	@echo "... sensor.i"
 	@echo "... sensor.s"

@@ -73,6 +73,7 @@ void pwm_init()
     pwm_set_chan_level(Slice_num_rear,  PWM_CHAN_B, DUTYMIN);
     pwm_set_chan_level(Slice_num_servo, PWM_CHAN_A, 625);
 
+
     sleep_ms(1000);
 }
 
@@ -119,4 +120,15 @@ void set_duty_rl(float duty)
     if (duty<DUTYMIN)duty=DUTYMIN;
     pwm_set_chan_level(Slice_num_rear, PWM_CHAN_A, duty);
     //printf("%4.0f ", duty);
+}
+
+
+void payload_hook(void)
+{
+    pwm_set_chan_level(Slice_num_servo, PWM_CHAN_A, SERVO_HOOK);
+}
+
+void payload_relese(void)
+{
+    pwm_set_chan_level(Slice_num_servo, PWM_CHAN_A, SERVO_RELEASE);
 }
