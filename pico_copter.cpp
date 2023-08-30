@@ -2,6 +2,7 @@
 
 //グローバル変数
 uint8_t Arm_flag=0;
+uint8_t Red_flag = 0;
 semaphore_t sem;
 
 int main(void)
@@ -25,6 +26,9 @@ int main(void)
   
   //Initilize Control
   control_init();
+
+  //RGB LED off
+  rgbled_off();
   
   //Initialize PWM
   //Start 400Hz Interval

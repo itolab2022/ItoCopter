@@ -11,6 +11,8 @@
 #include "pwm.hpp"
 #include "radio.hpp"
 #include "control.hpp"
+#include "i2c.hpp"
+#include "rgbled.hpp"
 #include <math.h>
 
 #define LED_PIN 25
@@ -18,6 +20,8 @@
 
 //グローバル変数
 extern uint8_t Arm_flag;
+extern uint8_t Red_flag;
+
 extern semaphore_t sem;
 
 #endif

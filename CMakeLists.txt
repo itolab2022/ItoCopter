@@ -21,6 +21,7 @@ add_executable(pico_copter
   control.cpp
   WS2812.cpp
   rgbled.cpp
+  i2c.cpp
 )
 
 pico_generate_pio_header(pico_copter ${CMAKE_CURRENT_LIST_DIR}/WS2812.pio)
@@ -31,6 +32,7 @@ target_link_libraries(pico_copter
   hardware_pwm 
   hardware_uart 
   hardware_pio
+  hardware_i2c
   pico_stdlib
   pico_multicore)
 

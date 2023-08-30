@@ -1141,6 +1141,33 @@ home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s:
 	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s
 .PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.c.s
 
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.obj: home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
+
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.obj
+
+# target to build an object file
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.obj
+
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.i: home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.i
+
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.i
+
+# target to preprocess a source file
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.i:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.i
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.i
+
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.s: home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.s
+
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.s
+
+# target to generate assembly for a file
+home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.s:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.s
+.PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.c.s
+
 home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.obj: home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.c.obj
 
 .PHONY : home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.obj
@@ -2014,6 +2041,33 @@ home/shohei/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.s:
 	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.s
 .PHONY : home/shohei/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.c.s
 
+i2c.obj: i2c.cpp.obj
+
+.PHONY : i2c.obj
+
+# target to build an object file
+i2c.cpp.obj:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/i2c.cpp.obj
+.PHONY : i2c.cpp.obj
+
+i2c.i: i2c.cpp.i
+
+.PHONY : i2c.i
+
+# target to preprocess a source file
+i2c.cpp.i:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/i2c.cpp.i
+.PHONY : i2c.cpp.i
+
+i2c.s: i2c.cpp.s
+
+.PHONY : i2c.s
+
+# target to generate assembly for a file
+i2c.cpp.s:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/i2c.cpp.s
+.PHONY : i2c.cpp.s
+
 lsm9ds1_reg.obj: lsm9ds1_reg.c.obj
 
 .PHONY : lsm9ds1_reg.obj
@@ -2295,6 +2349,9 @@ help:
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.obj"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.i"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/gpio.s"
+	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.obj"
+	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.i"
+	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/i2c.s"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.obj"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.i"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/irq.s"
@@ -2392,6 +2449,9 @@ help:
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.obj"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.i"
 	@echo "... home/shohei/pico/pico-sdk/src/rp2_common/pico_unique_id/unique_id.s"
+	@echo "... i2c.obj"
+	@echo "... i2c.i"
+	@echo "... i2c.s"
 	@echo "... lsm9ds1_reg.obj"
 	@echo "... lsm9ds1_reg.i"
 	@echo "... lsm9ds1_reg.s"

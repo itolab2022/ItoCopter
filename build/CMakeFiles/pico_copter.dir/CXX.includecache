@@ -1872,6 +1872,8 @@ hardware/platform_defs.h
 
 /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h
 
+/home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/i2c.h
+
 /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/intctrl.h
 
 /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/io_bank0.h
@@ -1891,6 +1893,12 @@ hardware/platform_defs.h
 /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/timer.h
 
 /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/uart.h
+
+/home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/i2c.h
+hardware/address_mapped.h
+/home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/hardware/address_mapped.h
+hardware/regs/i2c.h
+/home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/hardware/regs/i2c.h
 
 /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/interp.h
 hardware/address_mapped.h
@@ -1967,6 +1975,16 @@ hardware/structs/iobank0.h
 /home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/include/hardware/hardware/structs/iobank0.h
 hardware/irq.h
 /home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/include/hardware/hardware/irq.h
+
+/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/i2c.h
+pico.h
+/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/pico.h
+pico/time.h
+/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/pico/time.h
+hardware/structs/i2c.h
+/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/hardware/structs/i2c.h
+hardware/regs/dreq.h
+/home/shohei/pico/pico-sdk/src/rp2_common/hardware_i2c/include/hardware/hardware/regs/dreq.h
 
 /home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/include/hardware/irq.h
 pico.h
@@ -2110,6 +2128,26 @@ unistd.h
 math.h
 -
 
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/i2c.cpp
+i2c.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/i2c.hpp
+
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/i2c.hpp
+stdio.h
+-
+pico/stdlib.h
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico/stdlib.h
+hardware/gpio.h
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/hardware/gpio.h
+hardware/i2c.h
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/hardware/i2c.h
+pico/binary_info.h
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico/binary_info.h
+rgbled.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/rgbled.hpp
+pico_copter.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico_copter.hpp
+
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/lsm9ds1_reg.h
 stdio.h
 -
@@ -2125,6 +2163,10 @@ pico/binary_info.h
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico/binary_info.h
 hardware/spi.h
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/hardware/spi.h
+
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico_copter.cpp
+pico_copter.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico_copter.hpp
 
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico_copter.hpp
 string.h
@@ -2147,8 +2189,16 @@ radio.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.hpp
 control.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/control.hpp
+i2c.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/i2c.hpp
+rgbled.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/rgbled.hpp
 math.h
 -
+
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.cpp
+pwm.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.hpp
 
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.hpp
 stdio.h
@@ -2163,6 +2213,10 @@ pico_copter.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico_copter.hpp
 control.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/control.hpp
+
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.cpp
+radio.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.hpp
 
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.hpp
 stdio.h

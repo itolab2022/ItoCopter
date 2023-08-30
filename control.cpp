@@ -105,19 +105,40 @@ void linetrace(void);
 #define AVERAGE 2000
 #define KALMANWAIT 6000
 
-// LEDcontrol
-void led_control(void){
+//LED Control
+void led_control(void)
+{
   static uint16_t cnt=0;
   if (Arm_flag == 0 || Arm_flag == 1)
   {
     rgbled_wait();      
   }
-
-  else if (Arm_flag ==2 && Flight_mode == ROCKING)  
+  else if (Arm_flag ==2 && Flight_mode == ROCKING)
   {
     rgbled_rocking();
   }
+  else if (Arm_flag == 2 && Red_flag == 1)
+  {
+    rgbled_red();
+  }
+  else if (Arm_flag == 2 && Red_flag == 0 && Logflag == 0)
+  {
+    rgbled_normal();
+  }
+  else if (Arm_flag == 2 && Red_flag == 0 && Logflag == 1)
+  {
+    rgbled_orange();
+  }
+  else if (Arm_flag == 3)
+  {
+    if (cnt == 0)rgbled_green();
+    if (cnt == 50)rgbled_off();
+    cnt++;
+    if (cnt==100)cnt = 0;
+  }
+
 }
+
 
 
 //Main loop
@@ -323,6 +344,7 @@ void loop_400Hz(void)
     motor_stop();
     Logoutputflag=1;
     //LED Blink
+    rgbled_switch(led);
     gpio_put(LED_PIN, led);
     if(LedBlinkCounter<400){
       LedBlinkCounter++;
