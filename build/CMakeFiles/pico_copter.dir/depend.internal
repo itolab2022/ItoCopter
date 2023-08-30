@@ -2329,11 +2329,26 @@ CMakeFiles/pico_copter.dir/WS2812.cpp.obj
  /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/platform_defs.h
  /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/addressmap.h
  /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/clocks.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/intctrl.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/io_bank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/m0plus.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pads_bank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pio.h
  /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/sio.h
  /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/clocks.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/interp.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/iobank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/padsbank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/pio.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/sio.h
  /home/shohei/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h
  /home/shohei/pico/pico-sdk/src/rp2_common/hardware_base/include/hardware/address_mapped.h
  /home/shohei/pico/pico-sdk/src/rp2_common/hardware_clocks/include/hardware/clocks.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/include/hardware/gpio.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/include/hardware/irq.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio_instructions.h
  /home/shohei/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h
  /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/WS2812.cpp
  /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/WS2812.hpp
@@ -3657,11 +3672,38 @@ CMakeFiles/pico_copter.dir/radio.cpp.obj
  generated/pico_base/pico/config_autogen.h
  generated/pico_base/pico/version.h
 CMakeFiles/pico_copter.dir/rgbled.cpp.obj
+ /home/shohei/pico/pico-sdk/src/boards/include/boards/pico.h
+ /home/shohei/pico/pico-sdk/src/common/pico_base/include/pico.h
  /home/shohei/pico/pico-sdk/src/common/pico_base/include/pico/assert.h
+ /home/shohei/pico/pico-sdk/src/common/pico_base/include/pico/config.h
+ /home/shohei/pico/pico-sdk/src/common/pico_base/include/pico/error.h
  /home/shohei/pico/pico-sdk/src/common/pico_base/include/pico/types.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/platform_defs.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/addressmap.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/dreq.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/intctrl.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/io_bank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/m0plus.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pads_bank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/pio.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_regs/include/hardware/regs/sio.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/interp.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/iobank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/padsbank0.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/pio.h
+ /home/shohei/pico/pico-sdk/src/rp2040/hardware_structs/include/hardware/structs/sio.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/cmsis/include/cmsis/rename_exceptions.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_base/include/hardware/address_mapped.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_gpio/include/hardware/gpio.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_irq/include/hardware/irq.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/hardware_pio/include/hardware/pio_instructions.h
+ /home/shohei/pico/pico-sdk/src/rp2_common/pico_platform/include/pico/platform.h
  /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/WS2812.hpp
  /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/rgbled.cpp
  /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/rgbled.hpp
+ generated/pico_base/pico/config_autogen.h
+ generated/pico_base/pico/version.h
 CMakeFiles/pico_copter.dir/sensor.cpp.obj
  /home/shohei/pico/pico-sdk/src/boards/include/boards/pico.h
  /home/shohei/pico/pico-sdk/src/common/pico_base/include/pico.h

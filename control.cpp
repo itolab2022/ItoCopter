@@ -43,6 +43,7 @@ const float Phi_trim   = 0.01;
 const float Theta_trim = 0.02;
 const float Psi_trim   = 0.0;
 const double pi = 3.14159;
+float Line_trace_flag = 0;
 
 //Extended Kalman filter 
 Matrix<float, 7 ,1> Xp = MatrixXf::Zero(7,1);
@@ -98,6 +99,7 @@ void printPQR(void);
 // 追加
 void servo_control(void);
 void led_control(void);
+void linetrace(void);
 
 
 #define AVERAGE 2000
@@ -263,7 +265,9 @@ void loop_400Hz(void)
     {
       LineTraceCounter = 0;
       //linetrace (40Hz)
-      if (Line_trace_flag == 1)linetrace();     
+      if (Line_trace_flag == 1){
+        linetrace();
+      }
     }
     AngleControlCounter++;
     LineTraceCounter ++;
@@ -578,16 +582,16 @@ void angle_control(void)
 
     //Get angle ref (manual flight) 
     if (1)
-     {
-        Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
-        Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
-        Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
-     }
+    {
+      Phi_ref   = Phi_trim   + 0.3 *M_PI*(float)(Chdata[3] - (CH4MAX+CH4MIN)*0.5)*2/(CH4MAX-CH4MIN);
+      Theta_ref = Theta_trim + 0.3 *M_PI*(float)(Chdata[1] - (CH2MAX+CH2MIN)*0.5)*2/(CH2MAX-CH2MIN);
+      Psi_ref   = Psi_trim   + 0.8 *M_PI*(float)(Chdata[0] - (CH1MAX+CH1MIN)*0.5)*2/(CH1MAX-CH1MIN);
+    }
 
     // しょうへい--------------------------------------------------------------
     //Rocking Wings
     //ロッキングウイングは時間で終了する。終了したら事前に得ているStick量がPhi_refになる．　　　　→598行
-    else if(Flight_mode == ROCKING)
+    if(Flight_mode == ROCKING)
     {
       Phi_ref = rocking_wings(Phi_ref);
     }
@@ -600,7 +604,7 @@ void angle_control(void)
     psi_err   = Psi_ref   - (Psi   - Psi_bias);
     
     //PID Control
-    else if (T_ref/BATTERY_VOLTAGE < Flight_duty)
+    if (T_ref/BATTERY_VOLTAGE < Flight_duty)
     {
       Pref=0.0;
       Qref=0.0;
@@ -692,6 +696,7 @@ float rocking_wings(float stick)
 
 // --------------------------------------
 
+// void linetrace(void)
 void linetrace(void)
 {
   //目標値との誤差
