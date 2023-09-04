@@ -24,10 +24,17 @@
 #define SERVO_MIN 144
 #define SERVO_MAX 1904
 
-#define MODE_SW 4
-#define LANDING_SW 5
-#define LOG 8
+#define MODE_SW 10
+#define LANDING_SW 11
+#define LOG 12
 #define SERVO 4
+#define REDCIRCLE 5
+#define FAILSAFE 9
+#define FAILSAFEON_OFF 6
+#define LINETRACE 7
+#define ROCKING 8
+
+
 
 //０番と1番ピンに接続
 #define UART_TX_PIN 0

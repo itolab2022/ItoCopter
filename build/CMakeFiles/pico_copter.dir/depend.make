@@ -2706,6 +2706,7 @@ CMakeFiles/pico_copter.dir/control.cpp.obj: ../ekf.hpp
 CMakeFiles/pico_copter.dir/control.cpp.obj: ../i2c.hpp
 CMakeFiles/pico_copter.dir/control.cpp.obj: ../lsm9ds1_reg.h
 CMakeFiles/pico_copter.dir/control.cpp.obj: ../pico_copter.hpp
+CMakeFiles/pico_copter.dir/control.cpp.obj: ../pid.hpp
 CMakeFiles/pico_copter.dir/control.cpp.obj: ../pwm.hpp
 CMakeFiles/pico_copter.dir/control.cpp.obj: ../radio.hpp
 CMakeFiles/pico_copter.dir/control.cpp.obj: ../rgbled.hpp
@@ -3342,6 +3343,7 @@ CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../i2c.cpp
 CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../i2c.hpp
 CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../lsm9ds1_reg.h
 CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../pico_copter.hpp
+CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../pid.hpp
 CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../pwm.hpp
 CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../radio.hpp
 CMakeFiles/pico_copter.dir/i2c.cpp.obj: ../rgbled.hpp
@@ -3669,12 +3671,16 @@ CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../i2c.hpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../lsm9ds1_reg.h
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../pico_copter.cpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../pico_copter.hpp
+CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../pid.hpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../pwm.hpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../radio.hpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../rgbled.hpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: ../sensor.hpp
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: generated/pico_base/pico/config_autogen.h
 CMakeFiles/pico_copter.dir/pico_copter.cpp.obj: generated/pico_base/pico/version.h
+
+CMakeFiles/pico_copter.dir/pid.cpp.obj: ../pid.cpp
+CMakeFiles/pico_copter.dir/pid.cpp.obj: ../pid.hpp
 
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: /home/shohei/pico/eigen/Eigen/Cholesky
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: /home/shohei/pico/eigen/Eigen/Core
@@ -3995,6 +4001,7 @@ CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../ekf.hpp
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../i2c.hpp
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../lsm9ds1_reg.h
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../pico_copter.hpp
+CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../pid.hpp
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../pwm.cpp
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../pwm.hpp
 CMakeFiles/pico_copter.dir/pwm.cpp.obj: ../radio.hpp

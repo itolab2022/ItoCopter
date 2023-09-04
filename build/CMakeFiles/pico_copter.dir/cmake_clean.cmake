@@ -77,6 +77,7 @@ file(REMOVE_RECURSE
   "CMakeFiles/pico_copter.dir/i2c.cpp.obj"
   "CMakeFiles/pico_copter.dir/lsm9ds1_reg.c.obj"
   "CMakeFiles/pico_copter.dir/pico_copter.cpp.obj"
+  "CMakeFiles/pico_copter.dir/pid.cpp.obj"
   "CMakeFiles/pico_copter.dir/pwm.cpp.obj"
   "CMakeFiles/pico_copter.dir/radio.cpp.obj"
   "CMakeFiles/pico_copter.dir/rgbled.cpp.obj"

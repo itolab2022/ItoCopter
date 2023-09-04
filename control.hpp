@@ -11,6 +11,7 @@
 #include "ekf.hpp"
 #include <math.h>
 #include "rgbled.hpp"
+#include "pid.hpp"
 
 using Eigen::MatrixXd;
 using Eigen::MatrixXf;
@@ -20,7 +21,10 @@ using namespace Eigen;
 
 #define BATTERY_VOLTAGE (11.1)
 #define NORMAL 0
-#define ROCKING 1
+// #define ROCKING 1
+// #define AUTO 2
+// #define REDCIRCLE 3
+
 
 
 //グローバル関数の宣言
@@ -39,47 +43,48 @@ void rgbled_off(void);
 extern uint8_t LockMode;
 extern volatile uint8_t Logoutputflag;
 
-class PID
-{
-  private:
-    float m_kp;
-    float m_ti;
-    float m_td;
-    float m_filter_time_constant;
-    float m_err,m_err2,m_err3;
-    float m_h;
-  public:
-    float m_filter_output;
-    float m_integral;
-    PID();
-    void set_parameter(
-        float kp, 
-        float ti, 
-        float td,
-        float filter_time_constant, 
-        float h);
-    void reset(void);
-    void i_reset(void);
-    void printGain(void);
-    float filter(float x);
-    float update(float err);
-};
 
-class Filter
-{
-  private:
-    float m_state;
-    float m_T;
-    float m_h;
-  public:
-    float m_out;
-    Filter();
-    void set_parameter(
-        float T,
-        float h);
-    void reset(void);
-    float update(float u);
-};
+// class PID
+// {
+//   private:
+//     float m_kp;
+//     float m_ti;
+//     float m_td;
+//     float m_filter_time_constant;
+//     float m_err,m_err2,m_err3;
+//     float m_h;
+//   public:
+//     float m_filter_output;
+//     float m_integral;
+//     PID();
+//     void set_parameter(
+//         float kp, 
+//         float ti, 
+//         float td,
+//         float filter_time_constant, 
+//         float h);
+//     void reset(void);
+//     void i_reset(void);
+//     void printGain(void);
+//     float filter(float x);
+//     float update(float err);
+// };
+
+// class Filter
+// {
+//   private:
+//     float m_state;
+//     float m_T;
+//     float m_h;
+//   public:
+//     float m_out;
+//     Filter();
+//     void set_parameter(
+//         float T,
+//         float h);
+//     void reset(void);
+//     float update(float u);
+// };
 
 
 #endif

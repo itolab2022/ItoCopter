@@ -2111,6 +2111,8 @@ math.h
 -
 rgbled.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/rgbled.hpp
+pid.hpp
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pid.hpp
 
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/ekf.hpp
 stdio.h
@@ -2196,6 +2198,8 @@ rgbled.hpp
 math.h
 -
 
+/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pid.hpp
+
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.cpp
 pwm.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.hpp
@@ -2213,10 +2217,6 @@ pico_copter.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pico_copter.hpp
 control.hpp
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/control.hpp
-
-/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.cpp
-radio.hpp
-/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.hpp
 
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/radio.hpp
 stdio.h

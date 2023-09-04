@@ -1,6 +1,7 @@
 #include "control.hpp"
 
 
+
 //Sensor data
 float Ax,Ay,Az,Wp,Wq,Wr,Mx,My,Mz,Mx0,My0,Mz0,Mx_ave,My_ave,Mz_ave;
 float Acc_norm=0.0;
@@ -10,13 +11,13 @@ float Line_velocity;
 //Initial data
 float rate_limit = 180;
 
-// 追加しょうへい2023-8-29
+
 // Rocking wings
 float Rocking_timer = 0.0;
 float rocking_wings(float stick);
-uint8_t Flight_mode = 0; //0:Normal 1:Rocking wings 2:Landing
+uint8_t Flight_mode = 0; 
 
-
+float FAILSAFE_RLstop;
 
 //Times
 float Elapsed_time=0.0;
@@ -117,11 +118,26 @@ void led_control(void)
   {
     rgbled_rocking();
   }
+  else if (Arm_flag ==2 && Flight_mode == LINETRACE)
+  {
+    rgbled_rocking();
+  }
+  else if (Arm_flag ==2 && Flight_mode == REDCIRCLE)
+  {
+    rgbled_red();
+  }
+  else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_RLstop) && (Flight_mode != NORMAL))
+  {
+    rgbled_blue();
+    printf("%s",Flight_mode);
+    printf("why");
+  }
+  
   else if (Arm_flag == 2 && Red_flag == 1)
   {
     rgbled_red();
   }
-  else if (Arm_flag == 2 && Red_flag == 0 && Logflag == 0)
+  else if (Arm_flag == 2 && Flight_mode == NORMAL)
   {
     rgbled_normal();
   }
@@ -138,6 +154,7 @@ void led_control(void)
   }
 
 }
+
 
 
 
@@ -372,10 +389,10 @@ void control_init(void)
   psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
 
  //velocity control
- v_pid.set_parameter (0.5, 0.00001, 0.09, 0.01, 0.03);
+ v_pid.set_parameter (0.0, 0.0001, 1, 0.125, 0.025);
 
  //position control
- y_pid.set_parameter (1, 1, 1, 1, 1);
+ y_pid.set_parameter (1.3, 0.0001, 0.05, 0.125, 0.025);
 
   //Rate control
   //p_pid.set_parameter(3.3656, 0.1, 0.0112, 0.01, 0.0025);
@@ -457,28 +474,44 @@ void rate_control(void)
   float p_ref, q_ref, r_ref;
   float p_err, q_err, r_err;
 
+
+
   //Read Sensor Value
   sensor_read();
 
   // しょうへい--------------------------------------------------------
   // Mode SW
   //Chdata[MODE_SW]=1000;//本番はコメントにする/////////////////////////////////////////////////////////////////////////
-  if (Chdata[MODE_SW]>1241)
+  // if (Chdata[MODE_SW]>1241)
+  
+  
+  if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] > 500))
   {
     Flight_mode = ROCKING;
-    // Red_flag = 0;
+    Red_flag = 0;
   }
-  else if (Chdata[MODE_SW]<804) 
+
+  
+  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] > 500) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200) && (Chdata[FAILSAFE] < 400)){
+      Flight_mode = FAILSAFE_RLstop;
+    }
+  
+  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] > 500) && (Chdata[ROCKING] < 200))
+  {
+    Flight_mode = LINETRACE;
+    Red_flag = 0;
+    // Rocking_timer = 0.0;
+  }
+  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] > 500) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
+  {
+    Flight_mode = REDCIRCLE;
+    // Rocking_timer = 0.0;
+  }
+  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
   {
     Flight_mode = NORMAL;
-    // Red_flag = 0;
-    Rocking_timer = 0.0;
   }
-  else
-  {
-    // Flight_mode = REDCIRCLE;
-    Rocking_timer = 0.0;
-  }
+  else{}
   // ---------------------------------------------------------------
 
   //Get Bias
@@ -612,7 +645,7 @@ void angle_control(void)
 
     // しょうへい--------------------------------------------------------------
     //Rocking Wings
-    //ロッキングウイングは時間で終了する。終了したら事前に得ているStick量がPhi_refになる．　　　　→598行
+    //ロッキングウイングは時間で終了する。終了したら事前に得ているStick量がPhi_refになる．　　　　
     if(Flight_mode == ROCKING)
     {
       Phi_ref = rocking_wings(Phi_ref);
@@ -621,9 +654,12 @@ void angle_control(void)
 
     //Auto flight
     //Error
+    else if (Flight_mode == LINETRACE)
+    {
     phi_err   = Phi_ref   - (Phi   - Phi_bias);
     theta_err = Theta_ref - (Theta - Theta_bias);
     psi_err   = Psi_ref   - (Psi   - Psi_bias);
+    }
     
     //PID Control
     if (T_ref/BATTERY_VOLTAGE < Flight_duty)
@@ -717,6 +753,7 @@ float rocking_wings(float stick)
 }
 
 // --------------------------------------
+
 
 // void linetrace(void)
 void linetrace(void)
@@ -1081,91 +1118,91 @@ void kalman_filter(void)
 }
 
 
-PID::PID()
-{
-  m_kp=1.0e-8;
-  m_ti=1.0e8;
-  m_td=0.0;
-  m_integral=0.0;
-  m_filter_time_constant=0.01;
-  m_filter_output=0.0;
-  m_err=0.0;
-  m_h=0.01;
-}
+// PID::PID()
+// {
+//   m_kp=1.0e-8;
+//   m_ti=1.0e8;
+//   m_td=0.0;
+//   m_integral=0.0;
+//   m_filter_time_constant=0.01;
+//   m_filter_output=0.0;
+//   m_err=0.0;
+//   m_h=0.01;
+// }
 
-void PID::set_parameter(
-    float kp, 
-    float ti, 
-    float td,
-    float filter_time_constant, 
-    float h)
-{
-  m_kp=kp;
-  m_ti=ti;
-  m_td=td;
-  m_filter_time_constant=filter_time_constant;
-  m_h=h;
-}
+// void PID::set_parameter(
+//     float kp, 
+//     float ti, 
+//     float td,
+//     float filter_time_constant, 
+//     float h)
+// {
+//   m_kp=kp;
+//   m_ti=ti;
+//   m_td=td;
+//   m_filter_time_constant=filter_time_constant;
+//   m_h=h;
+// }
 
-void PID::reset(void)
-{
-  m_integral=0.0;
-  m_filter_output=0.0;
-  m_err=0.0;
-  m_err2=0.0;
-  m_err3=0.0;
-}
+// void PID::reset(void)
+// {
+//   m_integral=0.0;
+//   m_filter_output=0.0;
+//   m_err=0.0;
+//   m_err2=0.0;
+//   m_err3=0.0;
+// }
 
-void PID::i_reset(void)
-{
-  m_integral=0.0;
-}
-void PID::printGain(void)
-{
-  printf("#Kp:%8.4f Ti:%8.4f Td:%8.4f Filter T:%8.4f h:%8.4f\n",m_kp,m_ti,m_td,m_filter_time_constant,m_h);
-}
+// void PID::i_reset(void)
+// {
+//   m_integral=0.0;
+// }
+// void PID::printGain(void)
+// {
+//   printf("#Kp:%8.4f Ti:%8.4f Td:%8.4f Filter T:%8.4f h:%8.4f\n",m_kp,m_ti,m_td,m_filter_time_constant,m_h);
+// }
 
-float PID::filter(float x)
-{
-  m_filter_output = m_filter_output * m_filter_time_constant/(m_filter_time_constant + m_h) 
-                  + x * m_h/(m_filter_time_constant + m_h);   
-  return m_filter_output;
-}
+// float PID::filter(float x)
+// {
+//   m_filter_output = m_filter_output * m_filter_time_constant/(m_filter_time_constant + m_h) 
+//                   + x * m_h/(m_filter_time_constant + m_h);   
+//   return m_filter_output;
+// }
 
-float PID::update(float err)
-{
-  float d;
-  m_integral = m_integral + m_h * err;
-  if(m_integral> 30000.0)m_integral = 30000.0;
-  if(m_integral<-30000.0)m_integral =-30000.0;
-  m_filter_output = filter((err-m_err3)/m_h);
-  m_err3 = m_err2;
-  m_err2 = m_err;
-  m_err  = err;
-  return m_kp*(err + m_integral/m_ti + m_td * m_filter_output); 
-}
+// float PID::update(float err)
+// {
+//   float d;
+//   m_integral = m_integral + m_h * err;
+//   if(m_integral> 30000.0)m_integral = 30000.0;
+//   if(m_integral<-30000.0)m_integral =-30000.0;
+//   m_filter_output = filter((err-m_err3)/m_h);
+//   m_err3 = m_err2;
+//   m_err2 = m_err;
+//   m_err  = err;
+//   return m_kp*(err + m_integral/m_ti + m_td * m_filter_output); 
+// }
 
-Filter::Filter()
-{
-  m_state = 0.0;
-  m_T = 0.0025;
-  m_h = 0.0025;
-}
+// Filter::Filter()
+// {
+//   m_state = 0.0;
+//   m_T = 0.0025;
+//   m_h = 0.0025;
+// }
 
-void Filter::reset(void)
-{
-  m_state = 0.0;
-}
+// void Filter::reset(void)
+// {
+//   m_state = 0.0;
+// }
 
-void Filter::set_parameter(float T, float h)
-{
-  m_T = T;
-  m_h = h;
-}
+// void Filter::set_parameter(float T, float h)
+// {
+//   m_T = T;
+//   m_h = h;
+// }
 
-float Filter::update(float u)
-{
-  m_state = m_state * m_T /(m_T + m_h) + u * m_h/(m_T + m_h);
-  m_out = m_state;
-  return m_out;
-}
+// float Filter::update(float u)
+// {
+//   m_state = m_state * m_T /(m_T + m_h) + u * m_h/(m_T + m_h);
+//   m_out = m_state;
+//   return m_out;
+// }

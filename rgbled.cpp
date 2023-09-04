@@ -55,6 +55,20 @@ void rgbled_red(void)
   ledStrip.setPixelColor(9, WS2812::RGB(255,0,0));
   ledStrip.show();
 }
+void rgbled_blue(void)
+{
+  ledStrip.setPixelColor(0, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(1, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(2, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(3, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(4, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(5, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(6, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(7, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(8, WS2812::RGB(0,0,255));
+  ledStrip.setPixelColor(9, WS2812::RGB(0,0,255));
+  ledStrip.show();
+}
 
 void rgbled_orange(void)
 {

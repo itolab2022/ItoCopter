@@ -2122,6 +2122,33 @@ pico_copter.cpp.s:
 	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/pico_copter.cpp.s
 .PHONY : pico_copter.cpp.s
 
+pid.obj: pid.cpp.obj
+
+.PHONY : pid.obj
+
+# target to build an object file
+pid.cpp.obj:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/pid.cpp.obj
+.PHONY : pid.cpp.obj
+
+pid.i: pid.cpp.i
+
+.PHONY : pid.i
+
+# target to preprocess a source file
+pid.cpp.i:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/pid.cpp.i
+.PHONY : pid.cpp.i
+
+pid.s: pid.cpp.s
+
+.PHONY : pid.s
+
+# target to generate assembly for a file
+pid.cpp.s:
+	$(MAKE) -f CMakeFiles/pico_copter.dir/build.make CMakeFiles/pico_copter.dir/pid.cpp.s
+.PHONY : pid.cpp.s
+
 pwm.obj: pwm.cpp.obj
 
 .PHONY : pwm.obj
@@ -2458,6 +2485,9 @@ help:
 	@echo "... pico_copter.obj"
 	@echo "... pico_copter.i"
 	@echo "... pico_copter.s"
+	@echo "... pid.obj"
+	@echo "... pid.i"
+	@echo "... pid.s"
 	@echo "... pwm.obj"
 	@echo "... pwm.i"
 	@echo "... pwm.s"
