@@ -22,6 +22,7 @@ add_executable(pico_copter
   pwm.cpp
   radio.cpp
   control.cpp
+  pid.cpp
 )
 
 target_link_libraries(pico_copter 
