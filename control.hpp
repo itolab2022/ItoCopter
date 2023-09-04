@@ -10,6 +10,7 @@
 #include <Eigen/Dense>
 #include "ekf.hpp"
 #include <math.h>
+#include "pid.cpp"
 
 using Eigen::MatrixXd;
 using Eigen::MatrixXf;
