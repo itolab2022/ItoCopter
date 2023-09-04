@@ -5,6 +5,10 @@ float Ax,Ay,Az,Wp,Wq,Wr,Mx,My,Mz,Mx0,My0,Mz0,Mx_ave,My_ave,Mz_ave;
 float Acc_norm=0.0;
 float Line_range;
 float Line_velocity;
+float LineTraceCounter;
+float LineTrace_flag;
+float Line_trace_flag;
+float pi = 3.14158;
 
 //Initial data
 float rate_limit = 180;
@@ -85,6 +89,7 @@ void motor_stop(void);
 uint8_t lock_com(void);
 uint8_t logdata_out_com(void);
 void printPQR(void);
+void linetrace(void);
 
 #define AVERAGE 2000
 #define KALMANWAIT 6000
@@ -527,7 +532,7 @@ void angle_control(void)
     psi_err   = Psi_ref   - (Psi   - Psi_bias);
     
     //PID Control
-    else if (T_ref/BATTERY_VOLTAGE < Flight_duty)
+    if (T_ref/BATTERY_VOLTAGE < Flight_duty)
     {
       Pref=0.0;
       Qref=0.0;
@@ -552,13 +557,13 @@ void angle_control(void)
     }
 
     //saturation Rref
-    else if (Rref >= (rate_limit*pi()/180))
+    else if (Rref >= (rate_limit*pi/180))
     {
-      Rref = rate_limit*pi()/180;
+      Rref = rate_limit*pi/180;
     }
-    else if (Rref <= -(rate_limit*pi()/180))
+    else if (Rref <= -(rate_limit*pi/180))
     {
-      Rref = -(rate_limit*pi()/180);
+      Rref = -(rate_limit*pi/180);
     }
       
     //saturation R_com
@@ -572,13 +577,13 @@ void angle_control(void)
     }
 
     //saturation Pref
-    else if (Pref >= (rate_limit*pi()/180))
+    else if (Pref >= (rate_limit*pi/180))
     {
-      Pref = rate_limit*pi()/180;
+      Pref = rate_limit*pi/180;
     }
-    else if (Pref <= -(rate_limit*pi()/180))
+    else if (Pref <= -(rate_limit*pi/180))
     {
-      Pref = -(rate_limit*pi()/180);
+      Pref = -(rate_limit*pi/180);
     }
 
     //saturation P_com
@@ -620,13 +625,13 @@ void linetrace(void)
   psi_ref = y_pid.update(trace_y_err);
   
   //saturation Psi_ref
-  if ( psi_ref >= 40*pi()/180 )
+  if ( psi_ref >= 40*pi/180 )
    {
-     Psi_ref = 40*pi()/180;
+     Psi_ref = 40*pi/180;
    }
-  else if ( psi_ref <= -40*pi()/180 )
+  else if ( psi_ref <= -40*pi/180 )
    {
-     Psi_ref = -40*pi()/180;
+     Psi_ref = -40*pi/180;
    }
 
   //Roll loop
@@ -635,13 +640,13 @@ void linetrace(void)
   phi_ref = v_pid.update(trace_v_err);
 
   //saturation Phi_ref
-  if ( phi_ref >= 60*pi()/180 )
+  if ( phi_ref >= 60*pi/180 )
    {
-     Phi_ref = 60*pi()/180;
+     Phi_ref = 60*pi/180;
    }
-  else if ( phi_ref <= -60*pi()/180 )
+  else if ( phi_ref <= -60*pi/180 )
    {
-     Phi_ref = -60*pi()/180;
+     Phi_ref = -60*pi/180;
    }  
 }
 
@@ -962,91 +967,91 @@ void kalman_filter(void)
 }
 
 
-PID::PID()
-{
-  m_kp=1.0e-8;
-  m_ti=1.0e8;
-  m_td=0.0;
-  m_integral=0.0;
-  m_filter_time_constant=0.01;
-  m_filter_output=0.0;
-  m_err=0.0;
-  m_h=0.01;
-}
+// PID::PID()
+// {
+//   m_kp=1.0e-8;
+//   m_ti=1.0e8;
+//   m_td=0.0;
+//   m_integral=0.0;
+//   m_filter_time_constant=0.01;
+//   m_filter_output=0.0;
+//   m_err=0.0;
+//   m_h=0.01;
+// }
 
-void PID::set_parameter(
-    float kp, 
-    float ti, 
-    float td,
-    float filter_time_constant, 
-    float h)
-{
-  m_kp=kp;
-  m_ti=ti;
-  m_td=td;
-  m_filter_time_constant=filter_time_constant;
-  m_h=h;
-}
+// void PID::set_parameter(
+//     float kp, 
+//     float ti, 
+//     float td,
+//     float filter_time_constant, 
+//     float h)
+// {
+//   m_kp=kp;
+//   m_ti=ti;
+//   m_td=td;
+//   m_filter_time_constant=filter_time_constant;
+//   m_h=h;
+// }
 
-void PID::reset(void)
-{
-  m_integral=0.0;
-  m_filter_output=0.0;
-  m_err=0.0;
-  m_err2=0.0;
-  m_err3=0.0;
-}
+// void PID::reset(void)
+// {
+//   m_integral=0.0;
+//   m_filter_output=0.0;
+//   m_err=0.0;
+//   m_err2=0.0;
+//   m_err3=0.0;
+// }
 
-void PID::i_reset(void)
-{
-  m_integral=0.0;
-}
-void PID::printGain(void)
-{
-  printf("#Kp:%8.4f Ti:%8.4f Td:%8.4f Filter T:%8.4f h:%8.4f\n",m_kp,m_ti,m_td,m_filter_time_constant,m_h);
-}
+// void PID::i_reset(void)
+// {
+//   m_integral=0.0;
+// }
+// void PID::printGain(void)
+// {
+//   printf("#Kp:%8.4f Ti:%8.4f Td:%8.4f Filter T:%8.4f h:%8.4f\n",m_kp,m_ti,m_td,m_filter_time_constant,m_h);
+// }
 
-float PID::filter(float x)
-{
-  m_filter_output = m_filter_output * m_filter_time_constant/(m_filter_time_constant + m_h) 
-                  + x * m_h/(m_filter_time_constant + m_h);   
-  return m_filter_output;
-}
+// float PID::filter(float x)
+// {
+//   m_filter_output = m_filter_output * m_filter_time_constant/(m_filter_time_constant + m_h) 
+//                   + x * m_h/(m_filter_time_constant + m_h);   
+//   return m_filter_output;
+// }
 
-float PID::update(float err)
-{
-  float d;
-  m_integral = m_integral + m_h * err;
-  if(m_integral> 30000.0)m_integral = 30000.0;
-  if(m_integral<-30000.0)m_integral =-30000.0;
-  m_filter_output = filter((err-m_err3)/m_h);
-  m_err3 = m_err2;
-  m_err2 = m_err;
-  m_err  = err;
-  return m_kp*(err + m_integral/m_ti + m_td * m_filter_output); 
-}
+// float PID::update(float err)
+// {
+//   float d;
+//   m_integral = m_integral + m_h * err;
+//   if(m_integral> 30000.0)m_integral = 30000.0;
+//   if(m_integral<-30000.0)m_integral =-30000.0;
+//   m_filter_output = filter((err-m_err3)/m_h);
+//   m_err3 = m_err2;
+//   m_err2 = m_err;
+//   m_err  = err;
+//   return m_kp*(err + m_integral/m_ti + m_td * m_filter_output); 
+// }
 
-Filter::Filter()
-{
-  m_state = 0.0;
-  m_T = 0.0025;
-  m_h = 0.0025;
-}
+// Filter::Filter()
+// {
+//   m_state = 0.0;
+//   m_T = 0.0025;
+//   m_h = 0.0025;
+// }
 
-void Filter::reset(void)
-{
-  m_state = 0.0;
-}
+// void Filter::reset(void)
+// {
+//   m_state = 0.0;
+// }
 
-void Filter::set_parameter(float T, float h)
-{
-  m_T = T;
-  m_h = h;
-}
+// void Filter::set_parameter(float T, float h)
+// {
+//   m_T = T;
+//   m_h = h;
+// }
 
-float Filter::update(float u)
-{
-  m_state = m_state * m_T /(m_T + m_h) + u * m_h/(m_T + m_h);
-  m_out = m_state;
-  return m_out;
-}
+// float Filter::update(float u)
+// {
+//   m_state = m_state * m_T /(m_T + m_h) + u * m_h/(m_T + m_h);
+//   m_out = m_state;
+//   return m_out;
+// }
