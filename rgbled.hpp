@@ -15,6 +15,8 @@ void rgbled_orange(void);
 void rgbled_switch(uint8_t);
 void rgbled_wait(void);
 void rgbled_rocking(void);
+void rgbled_lightblue(void);
+void rgbled_pink(void);
 
 
 #endif

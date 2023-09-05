@@ -17,7 +17,6 @@ float Rocking_timer = 0.0;
 float rocking_wings(float stick);
 uint8_t Flight_mode = 0; 
 
-float FAILSAFE_RLstop;
 
 //Times
 float Elapsed_time=0.0;
@@ -114,33 +113,48 @@ void led_control(void)
   {
     rgbled_wait();      
   }
+  else if (Arm_flag == 2 && Flight_mode == NORMAL)
+  {
+    rgbled_normal();
+  }
   else if (Arm_flag ==2 && Flight_mode == ROCKING)
   {
     rgbled_rocking();
   }
   else if (Arm_flag ==2 && Flight_mode == LINETRACE)
   {
-    rgbled_rocking();
+    rgbled_lightblue();
   }
   else if (Arm_flag ==2 && Flight_mode == REDCIRCLE)
   {
-    rgbled_red();
+    rgbled_pink();
   }
-  else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_RLstop) && (Flight_mode != NORMAL))
+  else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_RL))
+  {
+    rgbled_orange();
+  }
+  else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_FL))
+  {
+    rgbled_orange();
+  }
+  else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_FR))
+  {
+    rgbled_orange();
+  }
+  else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_RR))
+  {
+    rgbled_orange();
+  }
+  else if ((Arm_flag ==2) && (Flight_mode == SERVO))
   {
     rgbled_blue();
-    printf("%s",Flight_mode);
-    printf("why");
   }
   
   else if (Arm_flag == 2 && Red_flag == 1)
   {
     rgbled_red();
   }
-  else if (Arm_flag == 2 && Flight_mode == NORMAL)
-  {
-    rgbled_normal();
-  }
+  
   else if (Arm_flag == 2 && Red_flag == 0 && Logflag == 1)
   {
     rgbled_orange();
@@ -491,10 +505,29 @@ void rate_control(void)
     Red_flag = 0;
   }
 
-  
-  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] > 500) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200) && (Chdata[FAILSAFE] < 400)){
-      Flight_mode = FAILSAFE_RLstop;
+  else if ((Chdata[FAILSAFEON_OFF] > 500))
+  {
+    if ((Chdata[FAILSAFE] < 400))
+    {
+      Flight_mode = 20;
+      Flight_mode = FAILSAFE_RL;
     }
+    else if((Chdata[FAILSAFE] < 1050) && (Chdata[FAILSAFE] > 401))
+    {
+      Flight_mode = 21;
+      Flight_mode = FAILSAFE_FL;
+    }
+    else if((Chdata[FAILSAFE] < 1650) && (Chdata[FAILSAFE] > 1051))
+    {
+      Flight_mode = 22;
+      Flight_mode = FAILSAFE_FR;
+    }
+    else if((Chdata[FAILSAFE] > 1651))
+    {
+      Flight_mode = 23;
+      Flight_mode = FAILSAFE_RR;
+    }  
+  }
   
   else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] > 500) && (Chdata[ROCKING] < 200))
   {
@@ -506,6 +539,11 @@ void rate_control(void)
   {
     Flight_mode = REDCIRCLE;
     // Rocking_timer = 0.0;
+  }
+  
+  else if((Chdata[SERVO] > 500) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
+  {
+    Flight_mode = SERVO;
   }
   else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
   {

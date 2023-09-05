@@ -34,6 +34,11 @@
 #define LINETRACE 7
 #define ROCKING 8
 
+#define FAILSAFE_RL 20
+#define FAILSAFE_FL 21
+#define FAILSAFE_FR 22
+#define FAILSAFE_RR 23
+
 
 
 //０番と1番ピンに接続
