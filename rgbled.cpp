@@ -156,6 +156,28 @@ void rgbled_rocking(void)
   if (cnt == 80) cnt = 0;
 }
 
+void rgbled_failsafe(void)
+{
+  static uint8_t state_fail = 0;
+  static uint8_t failsafecounter = 0;
+  static uint8_t failsafe_time = 0;
+
+  if (failsafe_time < 8){
+    rgbled_orange();
+    failsafe_time++;
+  }
+  else{
+      if (state_fail == 0)
+      {
+        state_fail = 1;
+        rgbled_orange();
+      }
+      else{
+        state_fail = 0;
+        rgbled_off();
+      }
+    }
+}
 
 
 void rgbled_off(void)

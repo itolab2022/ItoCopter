@@ -12,9 +12,9 @@ float Line_velocity;
 float rate_limit = 180;
 
 
-// Rocking wings
-float Rocking_timer = 0.0;
-float rocking_wings(float stick);
+// // Rocking wings
+// float Rocking_timer = 0.0;
+// float rocking_wings(float stick);
 uint8_t Flight_mode = 0; 
 
 
@@ -99,7 +99,7 @@ void printPQR(void);
 // 追加
 void servo_control(void);
 void led_control(void);
-void linetrace(void);
+// void linetrace(void);
 
 
 #define AVERAGE 2000
@@ -131,19 +131,19 @@ void led_control(void)
   }
   else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_RL))
   {
-    rgbled_orange();
+    rgbled_failsafe();
   }
   else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_FL))
   {
-    rgbled_orange();
+    rgbled_failsafe();
   }
   else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_FR))
   {
-    rgbled_orange();
+    rgbled_failsafe();
   }
   else if ((Arm_flag ==2) && (Flight_mode == FAILSAFE_RR))
   {
-    rgbled_orange();
+    rgbled_failsafe();
   }
   else if ((Arm_flag ==2) && (Flight_mode == SERVO))
   {
@@ -313,14 +313,14 @@ void loop_400Hz(void)
       //Angle Control (100Hz)
       sem_release(&sem);
     }
-    if(LineTraceCounter == 10)
-    {
-      LineTraceCounter = 0;
-      //linetrace (40Hz)
-      if (Line_trace_flag == 1){
-        linetrace();
-      }
-    }
+    // if(LineTraceCounter == 10)
+    // {
+    //   LineTraceCounter = 0;
+    //   //linetrace (40Hz)
+    //   if (Line_trace_flag == 1){
+    //     linetrace();
+    //   }
+    // }
     AngleControlCounter++;
     LineTraceCounter ++;
     
@@ -394,13 +394,13 @@ void control_init(void)
 {
   acc_filter.set_parameter(0.005, 0.0025);
   //Rate control
-  p_pid.set_parameter( 2.0, 0.145, 0.028, 0.015, 0.0025);//3.4
-  q_pid.set_parameter( 2.1, 0.125, 0.028, 0.015, 0.0025);//3.8
-  r_pid.set_parameter(12.0, 0.5, 0.008, 0.015, 0.0025);//9.4
+  p_pid.set_parameter( 0.5, 0.01, 0.05, 0.125, 0.0025);//3.4
+  q_pid.set_parameter( 0.5, 0.01, 0.05, 0.125, 0.0025);//3.8
+  r_pid.set_parameter(0.5, 0.01, 0.05, 0.125, 0.0025);//9.4
   //Angle control
-  phi_pid.set_parameter  ( 5.5, 9.5, 0.025, 0.018, 0.01);//6.0
-  theta_pid.set_parameter( 5.5, 9.5, 0.025, 0.018, 0.01);//6.0
-  psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
+  phi_pid.set_parameter  ( 1, 0.01, 0.02, 0.125, 0.01);//6.0
+  theta_pid.set_parameter( 1, 0.001, 0.1, 0.125, 0.01);//6.0
+  psi_pid.set_parameter  ( 1, 0.01, 0.1, 0.125, 0.01);
 
  //velocity control
  v_pid.set_parameter (0.0, 0.0001, 1, 0.125, 0.025);
@@ -499,53 +499,53 @@ void rate_control(void)
   // if (Chdata[MODE_SW]>1241)
   
   
-  if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] > 500))
-  {
-    Flight_mode = ROCKING;
-    Red_flag = 0;
-  }
+  // if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] > 500))
+  // {
+  //   Flight_mode = ROCKING;
+  //   Red_flag = 0;
+  // }
 
-  else if ((Chdata[FAILSAFEON_OFF] > 500))
-  {
-    if ((Chdata[FAILSAFE] < 400))
-    {
-      Flight_mode = 20;
-      Flight_mode = FAILSAFE_RL;
-    }
-    else if((Chdata[FAILSAFE] < 1050) && (Chdata[FAILSAFE] > 401))
-    {
-      Flight_mode = 21;
-      Flight_mode = FAILSAFE_FL;
-    }
-    else if((Chdata[FAILSAFE] < 1650) && (Chdata[FAILSAFE] > 1051))
-    {
-      Flight_mode = 22;
-      Flight_mode = FAILSAFE_FR;
-    }
-    else if((Chdata[FAILSAFE] > 1651))
-    {
-      Flight_mode = 23;
-      Flight_mode = FAILSAFE_RR;
-    }  
-  }
+  // else if ((Chdata[FAILSAFEON_OFF] > 500))
+  // {
+  //   if ((Chdata[FAILSAFE] < 400))
+  //   {
+  //     Flight_mode = 20;
+  //     Flight_mode = FAILSAFE_RL;
+  //   }
+  //   else if((Chdata[FAILSAFE] < 1050) && (Chdata[FAILSAFE] > 401))
+  //   {
+  //     Flight_mode = 21;
+  //     Flight_mode = FAILSAFE_FL;
+  //   }
+  //   else if((Chdata[FAILSAFE] < 1650) && (Chdata[FAILSAFE] > 1051))
+  //   {
+  //     Flight_mode = 22;
+  //     Flight_mode = FAILSAFE_FR;
+  //   }
+  //   else if((Chdata[FAILSAFE] > 1651))
+  //   {
+  //     Flight_mode = 23;
+  //     Flight_mode = FAILSAFE_RR;
+  //   }  
+  // }
   
-  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] > 500) && (Chdata[ROCKING] < 200))
-  {
-    Flight_mode = LINETRACE;
-    Red_flag = 0;
-    // Rocking_timer = 0.0;
-  }
-  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] > 500) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
-  {
-    Flight_mode = REDCIRCLE;
-    // Rocking_timer = 0.0;
-  }
+  // else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] > 500) && (Chdata[ROCKING] < 200))
+  // {
+  //   Flight_mode = LINETRACE;
+  //   Red_flag = 0;
+  //   // Rocking_timer = 0.0;
+  // }
+  // else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] > 500) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
+  // {
+  //   Flight_mode = REDCIRCLE;
+  //   // Rocking_timer = 0.0;
+  // }
   
-  else if((Chdata[SERVO] > 500) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
-  {
-    Flight_mode = SERVO;
-  }
-  else if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
+  // else if((Chdata[SERVO] > 500) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
+  // {
+  //   Flight_mode = SERVO;
+  // }
+  if((Chdata[SERVO] < 200) && (Chdata[REDCIRCLE] < 200) &&  (Chdata[FAILSAFEON_OFF] < 200) && (Chdata[LINETRACE] < 200) && (Chdata[ROCKING] < 200))
   {
     Flight_mode = NORMAL;
   }
@@ -684,10 +684,10 @@ void angle_control(void)
     // しょうへい--------------------------------------------------------------
     //Rocking Wings
     //ロッキングウイングは時間で終了する。終了したら事前に得ているStick量がPhi_refになる．　　　　
-    if(Flight_mode == ROCKING)
-    {
-      Phi_ref = rocking_wings(Phi_ref);
-    }
+    // if(Flight_mode == ROCKING)
+    // {
+    //   Phi_ref = rocking_wings(Phi_ref);
+    // }
     // ------------------------------------------------------------------------
 
     //Auto flight
@@ -764,6 +764,26 @@ void angle_control(void)
       P_com = -3.7;
     }
 
+    //saturation Qref
+    else if (Qref >= (rate_limit*pi/180))
+    {
+      Qref = rate_limit*pi/180;
+    }
+    else if (Qref <= -(rate_limit*pi/180))
+    {
+      Qref = -(rate_limit*pi/180);
+    }
+
+    //saturation Q_com
+    else if (Q_com >= 3.7)
+    {
+      Q_com = 3.7;
+    }
+    else if (Q_com <= -3.7)
+    {
+      Q_com = -3.7;
+    }
+
     //Logging  100Hzで情報を記憶
     logging();
 
@@ -775,69 +795,94 @@ void angle_control(void)
 
 // しょうへい----------------------------
 // Rocking wings
-float rocking_wings(float stick)
-{
-  float angle=25;//[deg]
-  float f=5.0;//[Hz]
+// float rocking_wings(float stick)
+// {
+//   float angle=25;//[deg]
+//   float f=5.0;//[Hz]
 
-  if(Rocking_timer<2.0)
-  {
-    Rocking_timer = Rocking_timer + 0.01;
-    rgbled_rocking();
-    return angle*M_PI/180*sin(f*2*M_PI*Rocking_timer);
-  }
-  rgbled_normal();
-  return stick;
-}
+//   if(Rocking_timer<2.0)
+//   {
+//     Rocking_timer = Rocking_timer + 0.01;
+//     rgbled_rocking();
+//     return angle*M_PI/180*sin(f*2*M_PI*Rocking_timer);
+//   }
+//   rgbled_normal();
+//   return stick;
+// }
 
 // --------------------------------------
 
 
 // void linetrace(void)
-void linetrace(void)
-{
-  //目標値との誤差
-  float trace_phi_err;
-  float trace_psi_err;
-  float trace_v_err;
-  float trace_y_err;
+// {
+//   //目標値との誤差
+//   float trace_phi_err;
+//   float trace_psi_err;
+//   float trace_v_err;
+//   float trace_y_err;
 
-  //目標値
-  float phi_ref;
-  float psi_ref;
-  float v_ref = 0;
-  float y_ref = 0;
+//   //目標値
+//   float phi_ref;
+//   float psi_ref;
+//   float v_ref = 0;
+//   float y_ref = 0;
 
-  //Yaw loop
-  //Y_con
-  trace_y_err = ( y_ref - Line_range);
-  psi_ref = y_pid.update(trace_y_err);
+//   //Yaw loop
+//   //Y_con
+//   trace_y_err = ( y_ref - Line_range);
+//   psi_ref = y_pid.update(trace_y_err);
   
-  //saturation Psi_ref
-  if ( psi_ref >= 40*pi/180 )
-   {
-     Psi_ref = 40*pi/180;
-   }
-  else if ( psi_ref <= -40*pi/180 )
-   {
-     Psi_ref = -40*pi/180;
-   }
+//   //saturation Psi_ref
+//   if ( psi_ref >= 40*pi/180 )
+//    {
+//      Psi_ref = 40*pi/180;
+//    }
+//   else if ( psi_ref <= -40*pi/180 )
+//    {
+//      Psi_ref = -40*pi/180;
+//    }
 
-  //Roll loop
-  //V_con
-  trace_v_err = ( v_ref - Line_velocity);
-  phi_ref = v_pid.update(trace_v_err);
+//   //Roll loop
+//   //V_con
+//   trace_v_err = ( v_ref - Line_velocity);
+//   phi_ref = v_pid.update(trace_v_err);
 
-  //saturation Phi_ref
-  if ( phi_ref >= 60*pi/180 )
-   {
-     Phi_ref = 60*pi/180;
-   }
-  else if ( phi_ref <= -60*pi/180 )
-   {
-     Phi_ref = -60*pi/180;
-   }  
-}
+//   //saturation Phi_ref
+//   if ( phi_ref >= 60*pi/180 )
+//    {
+//      Phi_ref = 60*pi/180;
+//    }
+//   else if ( phi_ref <= -60*pi/180 )
+//    {
+//      Phi_ref = -60*pi/180;
+//    }  
+// }
+
+// void failsafe(void){
+//   // モータを1つストップ
+//   // 対角を弱く
+//   // ヨー
+//   // y方向のズレを見るset_duty_fr(0.0);
+//   set_duty_fl(0.0);
+//   set_duty_rr(0.0);
+//   set_duty_rl(0.0);
+//   if(Flight_mode == FAILSAFE_FL){
+//     set_duty_fl(0.0);
+//   }
+//   else if (Flight_mode == FAILSAFE_FR)
+//   {
+//     set_duty_fr(0.0);
+//   }
+//   else if (Flight_mode == FAILSAFE_RL)
+//   {
+//     set_duty_rl(0.0);
+//   }
+//   else if (Flight_mode == FAILSAFE_RR)
+//   {
+//     set_duty_rr(0.0);
+//   }
+
+// }
 
 
 void logging(void)
