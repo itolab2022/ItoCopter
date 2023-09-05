@@ -8,7 +8,7 @@ float Line_velocity;
 float LineTraceCounter;
 float LineTrace_flag;
 float Line_trace_flag;
-float pi = 3.14158;
+float pi = 3.141592654;
 
 //Initial data
 float rate_limit = 180;
@@ -316,10 +316,10 @@ void control_init(void)
   psi_pid.set_parameter  ( 0.0, 10.0, 0.010, 0.03, 0.01);
 
  //velocity control
- v_pid.set_parameter (0.5, 0.00001, 0.09, 0.01, 0.03);
+ v_pid.set_parameter (0.5, 0.00001, 0.09, 0.125, 0.025);
 
  //position control
- y_pid.set_parameter (1, 1, 1, 1, 1);
+ y_pid.set_parameter (1.3, 0.0001, 0.05, 0.125, 0.025);
 
   //Rate control
   //p_pid.set_parameter(3.3656, 0.1, 0.0112, 0.01, 0.0025);
