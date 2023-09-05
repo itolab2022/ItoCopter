@@ -2192,10 +2192,6 @@ math.h
 
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pid.hpp
 
-/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.cpp
-pwm.hpp
-/mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.hpp
-
 /mnt/c/Users/shohei/Desktop/laboratory/ItoCopter/pwm.hpp
 stdio.h
 -

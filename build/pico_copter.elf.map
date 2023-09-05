@@ -2006,9 +2006,9 @@ Discarded input sections
                 0x0000000000000000        0x8 CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/pico_multicore/multicore.c.obj
  .bss.lockout_victim_initialized
                 0x0000000000000000        0x2 CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/pico_multicore/multicore.c.obj
- .text          0x0000000000000000        0x0 /tmp/cc0qDrpH.o
- .data          0x0000000000000000        0x0 /tmp/cc0qDrpH.o
- .bss           0x0000000000000000        0x0 /tmp/cc0qDrpH.o
+ .text          0x0000000000000000        0x0 /tmp/ccIlgz3O.o
+ .data          0x0000000000000000        0x0 /tmp/ccIlgz3O.o
+ .bss           0x0000000000000000        0x0 /tmp/ccIlgz3O.o
  .text          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a(guard.o)
  .data          0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a(guard.o)
  .bss           0x0000000000000000        0x0 /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a(guard.o)
@@ -19848,7 +19848,7 @@ LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp
 .boot2          0x0000000010000000      0x100
                 0x0000000010000000                __boot2_start__ = .
  *(.boot2)
- .boot2         0x0000000010000000      0x100 /tmp/cc0qDrpH.o
+ .boot2         0x0000000010000000      0x100 /tmp/ccIlgz3O.o
                 0x0000000010000100                __boot2_end__ = .
                 0x0000000000000001                ASSERT (((__boot2_end__ - __boot2_start__) == 0x100), ERROR: Pico second stage bootloader must be 256 bytes in size)
 
@@ -31023,7 +31023,7 @@ LOAD CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/lib/tinyusb/src/tusb.c
 LOAD CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/lib/tinyusb/src/common/tusb_fifo.c.obj
 LOAD CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/pico_fix/rp2040_usb_device_enumeration/rp2040_usb_device_enumeration.c.obj
 LOAD CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/pico_multicore/multicore.c.obj
-LOAD /tmp/cc0qDrpH.o
+LOAD /tmp/ccIlgz3O.o
 LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a
 LOAD /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libm.a
 START GROUP
@@ -31171,7 +31171,7 @@ LOAD linker stubs
  .ARM.attributes
                 0x0000000000000a68       0x2c CMakeFiles/pico_copter.dir/home/shohei/pico/pico-sdk/src/rp2_common/pico_multicore/multicore.c.obj
  .ARM.attributes
-                0x0000000000000a94       0x22 /tmp/cc0qDrpH.o
+                0x0000000000000a94       0x22 /tmp/ccIlgz3O.o
  .ARM.attributes
                 0x0000000000000ab6       0x2c /usr/lib/gcc/arm-none-eabi/9.2.1/../../../arm-none-eabi/lib/thumb/v6-m/nofp/libstdc++.a(guard.o)
  .ARM.attributes

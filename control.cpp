@@ -180,7 +180,7 @@ void loop_400Hz(void)
   S_time=time_us_32();
   
   //割り込みフラグリセット
-  pwm_clear_irq(2);
+  pwm_clear_irq(7);
 
   //Servo Control
   servo_control();
