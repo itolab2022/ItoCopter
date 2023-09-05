@@ -561,7 +561,7 @@ void angle_control(void)
     {
       Rref = rate_limit*pi/180;
     }
-    else if (Rref <= -(rate_limit*pi/180))
+    else if (Rref <= -(rate_limit*M/180))
     {
       Rref = -(rate_limit*pi/180);
     }
