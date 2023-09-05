@@ -68,7 +68,7 @@ float Logdata[LOGDATANUM]={0.0};
 
 //State Machine
 uint8_t LockMode=0;
-float Disable_duty =0.10;
+float Disable_duty =0.0;
 float Flight_duty  =0.18;//0.2/////////////////
 uint8_t OverG_flag = 0;
 
@@ -578,20 +578,50 @@ void rate_control(void)
   Q_com = q_pid.update(q_err);
   R_com = r_pid.update(r_err);
 
+ //saturation P_com
+    if (P_com >= 3.7)
+    {
+      P_com = 3.7;
+    }
+    else if (P_com <= -3.7)
+    {
+      P_com = -3.7;
+    }
+
+ //saturation R_com
+    if (R_com >= 3.7)
+    {
+      R_com = 3.7;
+    }
+    else if(R_com <= -3.7)
+    {
+      R_com = -3.7;
+    }
+
+ //saturation Q_com
+    if (Q_com >= 3.7)
+    {
+      Q_com = 3.7;
+    }
+    else if (Q_com <= -3.7)
+    {
+      Q_com = -3.7;
+    }
+
   //Motor Control
   // 1250/11.1=112.6
   // 1/11.1=0.0901
   
-  FR_duty = (T_ref +(-P_com +Q_com -R_com)*0.25)*0.0901;
-  FL_duty = (T_ref +( P_com +Q_com +R_com)*0.25)*0.0901;
-  RR_duty = (T_ref +(-P_com -Q_com +R_com)*0.25)*0.0901;
-  RL_duty = (T_ref +( P_com -Q_com -R_com)*0.25)*0.0901;
+  FR_duty = 0.0;//(T_ref +(-P_com +Q_com -R_com)*0.25)*0.1351;
+  FL_duty = 0.0;//(T_ref +( P_com +Q_com +R_com)*0.25)*0.1351;
+  RR_duty =0.0;//(T_ref +(-P_com -Q_com +R_com)*0.25)*0.1351;
+  RL_duty = 0.1;//(T_ref +( P_com -Q_com -R_com)*0.25)*0.1351;
   //FR_duty = (T_ref)*0.0901;
   //FL_duty = (T_ref)*0.0901;
   //RR_duty = (T_ref)*0.0901;
   //RL_duty = (T_ref)*0.0901;
   
-  float minimum_duty=0.1;
+  float minimum_duty=0.0;
   const float maximum_duty=0.95;
   minimum_duty = Disable_duty;
 
@@ -717,7 +747,7 @@ void angle_control(void)
       Psi_bias   = Psi;
       /////////////////////////////////////
     }
-    else if(0)
+    else
     {
       Pref = phi_pid.update(phi_err);
       Qref = theta_pid.update(theta_err);
@@ -725,7 +755,7 @@ void angle_control(void)
     }
 
     //saturation Rref
-    else if (Rref >= (rate_limit*pi/180))
+    if (Rref >= (rate_limit*pi/180))
     {
       Rref = rate_limit*pi/180;
     }
@@ -734,18 +764,10 @@ void angle_control(void)
       Rref = -(rate_limit*pi/180);
     }
       
-    //saturation R_com
-    else if (R_com >= 3.7)
-    {
-      R_com = 3.7;
-    }
-    else if(R_com <= -3.7)
-    {
-      R_com = -3.7;
-    }
+   
 
     //saturation Pref
-    else if (Pref >= (rate_limit*pi/180))
+    if (Pref >= (rate_limit*pi/180))
     {
       Pref = rate_limit*pi/180;
     }
@@ -754,34 +776,14 @@ void angle_control(void)
       Pref = -(rate_limit*pi/180);
     }
 
-    //saturation P_com
-    else if (P_com >= 3.7)
-    {
-      P_com = 3.7;
-    }
-    else if (P_com <= -3.7)
-    {
-      P_com = -3.7;
-    }
-
     //saturation Qref
-    else if (Qref >= (rate_limit*pi/180))
+    if (Qref >= (rate_limit*pi/180))
     {
       Qref = rate_limit*pi/180;
     }
     else if (Qref <= -(rate_limit*pi/180))
     {
       Qref = -(rate_limit*pi/180);
-    }
-
-    //saturation Q_com
-    else if (Q_com >= 3.7)
-    {
-      Q_com = 3.7;
-    }
-    else if (Q_com <= -3.7)
-    {
-      Q_com = -3.7;
     }
 
     //Logging  100Hzで情報を記憶
